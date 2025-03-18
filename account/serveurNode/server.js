@@ -30,6 +30,16 @@ app.get('/db', (req, res) => {
         });
 });
 
+app.get('/deco', (req, res) => {
+    client.end()
+        .then(() => {
+            res.send('Connexion fermée');
+        })
+        .catch((err) => {
+            res.send('Erreur lors de la fermeture de la connexion', err);
+        });
+})
+
 app.get('/random', (req, res) => {
     res.send(Math.random().toString());
 });
