@@ -17,7 +17,7 @@ services:
 
   account-service:
     build:
-      context: ./services/account/serveurNode
+      context: ./services/account/serveur_node
     container_name: account_service
     ports:
       - "8080:3000"
@@ -28,7 +28,7 @@ services:
     networks:
       - mynetwork
     volumes:
-      - ./services/account/serveurNode:/app
+      - ./services/account/serveur_node:/app
       - /app/node_modules
 
   api-gateway:
