@@ -1,18 +1,16 @@
-# Utilise une image Node.js officielle
 FROM node:18
 
-# Définit le dossier de travail dans le conteneur
 WORKDIR /app
 
-# Copie les fichiers du projet
-COPY package.json package-lock.json ./
-RUN npm install
+# Copie uniquement package.json
+COPY package.json ./
+
+# Installation propre de tous les modules
+RUN rm -rf node_modules && npm install && npm rebuild bcrypt --build-from-source
 
 # Copie le reste des fichiers
 COPY . .
 
-# Expose le port utilisé par l'application
 EXPOSE 3000
 
-# Commande pour démarrer l'application
 CMD ["node", "server.js"]

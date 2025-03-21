@@ -9,8 +9,8 @@ services:
     environment:
       - NODE_ENV=production
     networks:
-      - mynetwork  # Utiliser le réseau partagé
+      - mynetwork
 
 networks:
   mynetwork:
-    external: true  # Utiliser un réseau externe déjà créé
+    external: true

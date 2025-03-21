@@ -10,11 +10,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - mynetwork  # Utilisation du même réseau partagé
+      - mynetwork
 
 networks:
   mynetwork:
-    external: true  # Indique qu'on utilise un réseau existant
+    external: true
 
 volumes:
   pgdata:
