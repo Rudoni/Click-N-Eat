@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8081:8081"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+    networks:
+      - mynetwork  # Utiliser le réseau partagé
+
+networks:
+  mynetwork:
+    external: true  # Utiliser un réseau externe déjà créé
