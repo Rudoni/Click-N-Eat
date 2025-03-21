@@ -1,5 +1,5 @@
 const port = 3000;
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const express = require('express');
 const app = express();
 const client = require('./db'); // Importer le client PostgreSQL

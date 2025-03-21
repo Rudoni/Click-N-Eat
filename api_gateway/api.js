@@ -7,7 +7,7 @@ app.use(express.json());
 const GATEWAY_PORT = 8081; // Tu peux choisir un autre port si besoin
 
 // L'URL de ton service Node.js qui tourne sur serveur.js
-const SERVICE_URL = "http://serveurnode-web-1:3000";
+const SERVICE_URL = "http://account-service:3000";
 
 const body = "<body><header><a href='http://localhost:8081/'>Click'n'Eat</a></header><br>"
 

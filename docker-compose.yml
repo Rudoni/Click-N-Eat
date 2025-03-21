@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: accountdb
+    ports:
+      - "5433:5432"  # Port externe : interne
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+
+  account-service:
+    build:
+      context: ./services/account/serveurNode
+    container_name: account_service
+    ports:
+      - "8080:3000"
+    depends_on:
+      - postgres
+    environment:
+      - NODE_ENV=production
+    networks:
+      - mynetwork
+    volumes:
+      - ./services/account/serveurNode:/app
+      - /app/node_modules
+
+  api-gateway:
+    build:
+      context: ./api_gateway
+    container_name: api_gateway
+    ports:
+      - "8081:8081"
+    depends_on:
+      - account-service
+    networks:
+      - mynetwork
+    volumes:
+      - ./api_gateway:/app
+      - /app/node_modules
+
+volumes:
+  pgdata:
+
+networks:
+  mynetwork:
+    driver: bridge
