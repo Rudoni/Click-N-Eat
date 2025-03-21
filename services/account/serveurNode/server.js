@@ -96,9 +96,10 @@ app.post("/register/register", async (req, res) => {
 
     console.log("register/register", email, password);
 
-    if (password != password2) {
-        return res.status(405).json({message: "Les mots de passe ne correspondent pas."});
+    if (password !== password2) {
+        return res.status(400).json({ message: "Les mots de passe ne correspondent pas." });
     }
+
 
     if (!password.match(/(?=.*[A-Z]{1,})(?=.*[@]{1,})(?=.*\d{1,})(?=[a-z]{1,}).{8,}/)) {
         return res.status(406).json({message: "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial."})

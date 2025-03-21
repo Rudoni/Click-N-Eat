@@ -61,21 +61,25 @@ app.get('/register', async (req, res) => {
 });
 
 app.post('/register/register', async (req, res) => {
-
-    let response
+    let response;
 
     try {
-        console.log("req.body", req.body)
-        // Redirection de la requête POST vers le serveur d'authentification (localhost:3000)
+        console.log("req.body", req.body);
         response = await axios.post(`${SERVICE_URL}/register/register`, req.body);
-        console.log(response)
-        // Retourner la réponse du serveur d'authentification au client
+        console.log(response);
         res.status(response.status).json(response.data);
     } catch (error) {
-        console.error('Erreur Axios:', error.message);
-        res.status(500).send('Erreur interne du serveur');
+        if (error.response && error.response.status === 400) {
+            alert(error.response.data.message);
+            res.status(400).json({ message: error.response.data.message });
+        } else {
+            // Si c'est une autre erreur, on envoie une réponse générique
+            console.error('Erreur Axios:', error.message);
+            res.status(500).send('Erreur interne du serveur');
+        }
     }
 });
+
 
 app.get('/dashboard', async (req, res) => {
     res.send(body + " Vous etez autentifier </body");
