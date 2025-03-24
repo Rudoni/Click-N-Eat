@@ -1,0 +1,52 @@
+import React, { useState } from 'react';
+import './Login.css';
+import { useNavigate } from 'react-router-dom';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // TODO: appeler l’API ici
+    alert("Connexion réussie !");
+  };
+
+  return (
+    <div className="login-page">
+      <div className="back-arrow" onClick={() => navigate(-1)}>←</div>
+
+      <form className="login-form" onSubmit={handleLogin}>
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="support@clickneat.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <label htmlFor="password">Mot de passe</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="motdepasse123"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <a href="#" className="forgot-link">Mot de passe oublié ?</a>
+
+        <button type="submit" className="btn yellow">Se connecter</button>
+        <button type="button" className="btn yellow" onClick={() => navigate('/register')}>
+          Créer un compte
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default Login;

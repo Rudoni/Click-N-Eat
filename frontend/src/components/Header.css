@@ -1,0 +1,78 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    background-color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .logo {
+    height: 50px;
+  }
+  
+  .burger {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  
+  /* Navigation de base (desktop) */
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .link {
+    font-weight: 600;
+    text-decoration: none;
+    color: #000;
+  }
+  
+  .btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .btn.light {
+    background-color: #f9f9f9;
+    color: #000;
+  }
+  
+  .btn.yellow {
+    background-color: #FFCC00;
+    color: #000;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .burger {
+      display: block;
+    }
+  
+    .nav {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      right: 2rem;
+      top: 90px;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: fit-content;
+      gap: 1rem;
+    }
+  
+    .nav.open {
+      display: flex;
+    }
+  }
+  

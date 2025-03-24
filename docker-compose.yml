@@ -44,6 +44,22 @@ services:
     volumes:
       - ./api_gateway:/app
       - /app/node_modules
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Pour éviter les conflits de modules avec l’hôte
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Fix pour le hot reload dans Docker
+    networks:
+      - mynetwork
+    depends_on:
+      - api-gateway
+
 
 volumes:
   pgdata:
