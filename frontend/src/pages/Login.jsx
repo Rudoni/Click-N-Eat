@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -38,7 +39,9 @@ const Login = () => {
           required
         />
 
-        <a href="#" className="forgot-link">Mot de passe oublié ?</a>
+        <Link to="/forgot-password" className="forgot-link">
+           Mot de passe oublié ?
+        </Link>
 
         <button type="submit" className="btn yellow">Se connecter</button>
         <button type="button" className="btn yellow" onClick={() => navigate('/register')}>

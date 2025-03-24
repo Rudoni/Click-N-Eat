@@ -152,7 +152,7 @@ app.get('/db', (req, res) => {
         })
         .catch(err => {
             res.send('❌ Erreur de connexion : ' + err.message);
-        });
+});
 });
 
 app.get('/deco', (req, res) => {

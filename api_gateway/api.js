@@ -58,8 +58,8 @@ app.get('/register', async (req, res) => {
         console.error('Erreur Axios:', error.message); // Log de l'erreur
         res.status(500).send('Erreur interne du serveur');
     }
-});
-
+  });
+  
 app.post('/register/register', async (req, res) => {
     let response;
 
