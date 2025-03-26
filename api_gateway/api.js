@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 
 // Définir un port pour l'API Gateway
-const GATEWAY_PORT = 8081; // Tu peux choisir un autre port si besoin
+const GATEWAY_PORT = 8081; 
 
 // L'URL de ton service Node.js qui tourne sur serveur.js
 const SERVICE_URL = "http://account-service:3000";
