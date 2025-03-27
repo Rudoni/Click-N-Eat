@@ -27,7 +27,7 @@ const Login = () => {
         <input
           id="email"
           type="email"
-          placeholder="support@clickneat.com"
+          placeholder="Entrez votre adresse mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -37,7 +37,7 @@ const Login = () => {
         <input
           id="password"
           type="password"
-          placeholder="motdepasse123"
+          placeholder="Entrer votre mot de passe"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
