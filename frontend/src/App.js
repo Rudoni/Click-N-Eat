@@ -8,6 +8,7 @@ import Contact from './pages/Contact';
 import Header from './components/Header'; 
 import Footer from './components/Footer';
 import Command from './pages/Command';
+import PrivacyPolicy from './pages/Privacy';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/commander" element={<Command />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
       </Routes>
       <Footer />
     </Router>

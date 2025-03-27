@@ -1,5 +1,6 @@
 import React from 'react';
 import './Footer.css';
+import { Link } from 'react-router-dom'; 
 
 const Footer = () => {
   return (
@@ -22,8 +23,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-col">
-        <a href="#">Politique et confidentialité</a>
-        <a href="#">Condition</a>
+      <Link to="/privacy">Politique et confidentialité</Link>
         <p>© 2025 Click’N’Eat Inc.</p>
       </div>
     </footer>
