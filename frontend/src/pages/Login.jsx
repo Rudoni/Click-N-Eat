@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,10 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Connexion à Click-N-Eat";
+  }, []);
 
   const handleLogin = (e) => {
     e.preventDefault();

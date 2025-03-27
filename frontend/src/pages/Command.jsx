@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Command.css';
 
@@ -12,6 +12,10 @@ const restaurants = [
 
 const Command = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Commander en ligne";
+  }, []);
 
   //Partie pour rediriger vers la carte du restaurant
   const handleNavigate = (id) => {

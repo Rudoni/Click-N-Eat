@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Contact.css';
 import { useNavigate } from 'react-router-dom';
 
 const Contact = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Contact";
+  }, []);
+
   const [formData, setFormData] = useState({
     nom: '',
     prenom: '',

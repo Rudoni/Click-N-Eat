@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ForgotPassword.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,6 +6,10 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Mot de passe oublié";
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

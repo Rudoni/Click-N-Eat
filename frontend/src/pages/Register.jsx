@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Register.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +11,10 @@ const Register = () => {
     email: "",
     password: ""
   });
+
+  useEffect(() => {
+    document.title = "S'inscrire à Click-N-Eat";
+  }, []);
 
   const navigate = useNavigate();
 
