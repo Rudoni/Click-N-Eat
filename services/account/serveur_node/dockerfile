@@ -3,7 +3,7 @@ FROM node:18
 WORKDIR /app
 
 # Copie uniquement package.json
-COPY package.json ./
+COPY package.json package-lock.json ./
 
 # Installation propre de tous les modules
 RUN rm -rf node_modules && npm install && npm rebuild bcrypt --build-from-source
