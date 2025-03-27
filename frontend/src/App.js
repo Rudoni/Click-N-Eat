@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Contact from './pages/Contact';
 import Header from './components/Header'; 
 import Footer from './components/Footer';
+import Command from './pages/Command';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/commander" element={<Command />} />
       </Routes>
       <Footer />
     </Router>
