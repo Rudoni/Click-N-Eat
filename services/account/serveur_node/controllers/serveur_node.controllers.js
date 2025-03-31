@@ -10,7 +10,7 @@ exports.register = async (req, res) => {
     }
 
 
-    if (!password.match(/(?=.*[A-Z]{1,})(?=.*[@]{1,})(?=.*\d{1,})(?=[a-z]{1,}).{8,}/)) {
+    if (!password.match(/(?=.*[A-Z]{1,})(?=.*[@]{1,})(?=.*\d{1,})(?=.*[a-z]{1,}).{8,}/)) {
         return res.status(400).json({message: "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial."})
     }
 
@@ -29,12 +29,12 @@ exports.register = async (req, res) => {
 
     // const result = await client.query(query)
     // console.log(result)
-
-    await client.end()
-    if (email === "test@email.com" && password === "1234") {
+    //
+    // await client.end()
+    if (response.rowCount == 1) {
         return res.json({message: "Connexion réussie !"});
     } else {
-        return res.status(400).json({message: "Email ou mot de passe incorrect."});
+        return res.status(400).json({message: "Probleme lors de la creation du compte"});
     }
 };
 

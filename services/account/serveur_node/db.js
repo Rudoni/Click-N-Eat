@@ -7,7 +7,7 @@ const client = new Client({
     port: 5432,        // Le port sur lequel PostgreSQL écoute
     user: 'root',      // L'utilisateur
     password: 'rootpassword', // Le mot de passe
-    database: 'postgres' // Le nom de la base de données
+    database: 'account' // Le nom de la base de données
 });
 
 // Établir la connexion une seule fois au démarrage
