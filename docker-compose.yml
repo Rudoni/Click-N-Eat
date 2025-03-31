@@ -31,6 +31,22 @@ services:
       - ./services/account/serveur_node:/app
       - /app/node_modules
 
+  restaurant-service:
+    build:
+      context: ./services/restaurant
+    container_name: restaurant_service
+    ports:
+      - "3003:3003"
+    depends_on:
+      - postgres
+    environment:
+      - NODE_ENV=production
+    networks:
+      - mynetwork
+    volumes:
+      - ./services/account/serveur_node:/app
+      - /app/node_modules
+
   api-gateway:
     build:
       context: ./api_gateway
