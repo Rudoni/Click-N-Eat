@@ -16,6 +16,13 @@
     color: #FFCC00;
     cursor: pointer;
   }
+
+  .role-selector button.selected {
+    background: #b2b2b2;
+    cursor: default;
+    pointer-events: none;
+  }
+  
   
   .role-selector {
     display: flex;

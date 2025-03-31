@@ -53,23 +53,31 @@ const Register = () => {
     }
   };
 
+  const roleNames = {
+    "1": "Client",
+    "2": "Restaurateur",
+    "3": "Développeur tiers",
+    "4": "Livreur",
+  };
+
   return (
     <div className="register-page">
       <div className="back-arrow" onClick={() => navigate(-1)}>←</div>
 
       <div className="role-selector">
-        <button onClick={() => setRole("1")}>Client</button>
-        <button onClick={() => setRole("2")}>Restaurateur</button>
-        <button onClick={() => setRole("3")}>Développeur tiers</button>
-        <button onClick={() => setRole("4")}>Livreur</button>
+        {Object.entries(roleNames).map(([key, name]) => (
+          <button 
+            key={key} 
+            onClick={() => setRole(key)}
+            className={role === key ? "selected" : ""}
+          >
+            {name}
+          </button>
+        ))}
       </div>
 
       <form className="register-form" onSubmit={handleSubmit}>
-        <h2>
-          {role === "2"
-            ? "Restaurateur"
-            : "Client / Développeur tiers / Livreur"}
-        </h2>
+        <h2>{roleNames[role] || "Sélectionnez un rôle"}</h2>  {/* Affichage dynamique */}
 
         <label>Nom</label>
         <input id="nom" name="nom" onChange={handleChange} required />
@@ -91,7 +99,7 @@ const Register = () => {
         </button>
       </form>
     </div>
-  );
+  );  
 };
 
 export default Register;
