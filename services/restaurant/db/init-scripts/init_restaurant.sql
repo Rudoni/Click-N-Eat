@@ -9,10 +9,11 @@ CREATE USER restaurant_usr WITH ENCRYPTED PASSWORD 'restaurant_pwd';
 
 CREATE TABLE restaurant (
     restaurant_id SERIAL PRIMARY KEY,
-    restaurant_name VARCHAR(100) NOT NULL,
+    restaurant_name VARCHAR(100) NOT NULL UNIQUE,
     user_id INTEGER NOT NULL,
     restaurant_description VARCHAR(300),
-    image_binary BYTEA,
+    image_main_binary BYTEA,
+    image_back_binary BYTEA,
     address_country VARCHAR(50),
     address_city VARCHAR(100),
     address_postal_code VARCHAR(20),
@@ -54,6 +55,6 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO restaurant_usr;
 
 insert into article_types (article_type_name) values ('Boisson');
 insert into article_types (article_type_name) values ('Dessert');
-insert into article_types (article_type_name) values ('Entrée');
+insert into article_types (article_type_name) values ('Entree');
 insert into article_types (article_type_name) values ('Plat');
 insert into article_types (article_type_name) values ('Accompagnement');
