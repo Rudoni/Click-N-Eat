@@ -5,49 +5,22 @@ const client = require("../db");
 exports.addRestaurant = async (req, res) => {
     const {restaurantName, description, country, city, postalCode, address, mainImage, backgroundImage} = req.body;
 
+    const idUser="";
+
     const query = {
         // give the query a unique name
         name: 'fetch-user',
-        text: 'insert into client (first_name, last_name, email, password_hash, user_type_id) values ($1, $2, $3, $4, $5)',
-        values: [prenom, nom, email, hashed_password, role],
+        text: 'INSERT INTO restaurant(restaurant_name, user_id, restaurant_description, image_main_binary, image_back_binary, address_country, address_city, address_postal_code, address_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);',
+        values: [restaurantName, idUser, description, mainImage, backgroundImage, country, city, postalCode, address],
     }
 
     let response = await client.query(query)
 
     console.log(response)
-
-    // const result = await client.query(query)
-    // console.log(result)
-    //
-    // await client.end()
+    
     if (response.rowCount == 1) {
-        return res.json({message: "Connexion réussie !"});
+        return res.json({message: "Création du restaurant "+ restaurantName + " réussie !"});
     } else {
-        return res.status(400).json({message: "Probleme lors de la creation du compte"});
+        return res.status(400).json({message: "Probleme lors de la creation du restaurant"});
     }
-};
-
-
-exports.login = (req, res) => {
-    const { email, password } = req.body;
-
-    console.log("login/aut", email, password);
-
-    if (email === "test@email.com" && password === "1234") {
-        return res.status(200).json({ message: "Connexion réussie !" });
-    } else {
-        return res.status(400).json({ message: "Email ou mot de passe incorrect." });
-    }
-};
-
-exports.authenticate = (req, res) => {
-    let token = req.headers["authorization"].split("Bearer ")[1];
-
-
-    jwt.verify(token, process.env.ACCESS_JWT_KEY, (err, decoded) => {
-        if(err){
-            return res.status(400).json({ message: "Your token is invalid!" });
-        }
-        return res.status(200).json({ message: "You are authenticated!" });
-    });
 };
