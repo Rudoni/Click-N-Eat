@@ -43,7 +43,12 @@ const Register = () => {
 
       const data = await response.json();
       if (response.ok) {
-        navigate("/dashboard");
+        console.log(role)
+        if (role == 2) {
+          navigate("/create-restaurant");
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         console.error("Erreur de connexion :", data.message);
       }
