@@ -3,14 +3,14 @@ const bcrypt = require('bcryptjs');
 const client = require("../db");
 
 exports.register = async (req, res) => {
-    const {email, password, password2, nom, prenom, role} = req.body;
+    const {email, password, password2, nom, prenom, type} = req.body;
 
     if (password !== password2) {
         return res.status(400).json({message: "Les mots de passe ne correspondent pas."});
     }
 
 
-    if (!password.match(/(?=.*[A-Z]{1,})(?=.*[@]{1,})(?=.*\d{1,})(?=.*[a-z]{1,}).{8,}/)) {
+    if (!password.match(/(?=.*[A-Z]{1,})(?=.*[^a-zA-Z\s\d]{1,})(?=.*\d{1,})(?=.*[a-z]{1,}).{8,}/)) {
         return res.status(400).json({message: "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial."})
     }
 
@@ -20,21 +20,30 @@ exports.register = async (req, res) => {
         // give the query a unique name
         name: 'fetch-user',
         text: 'insert into client (first_name, last_name, email, password_hash, user_type_id) values ($1, $2, $3, $4, $5)',
-        values: [prenom, nom, email, hashed_password, role],
+        values: [prenom, nom, email, hashed_password, type],
     }
+    try {
 
-    let response = await client.query(query)
 
-    console.log(response)
+        let response = await client.query(query)
 
-    // const result = await client.query(query)
-    // console.log(result)
-    //
-    // await client.end()
-    if (response.rowCount == 1) {
-        return res.json({message: "Connexion réussie !"});
-    } else {
-        return res.status(400).json({message: "Probleme lors de la creation du compte"});
+        console.log(response)
+
+        // const result = await client.query(query)
+        // console.log(result)
+        //
+        // await client.end()
+        if (response.rowCount == 1) {
+            return res.json({message: "Connexion réussie !"});
+        } else {
+            return res.status(400).json({message: "Problème lors de la creation du compte"});
+        }
+    }catch (e){
+        console.log("error", e)
+        if(e.code == 23505){
+            return res.status(400).json({message: "Un compte exist deja avec cette adresse mail"});
+        }
+        return res.status(400).json({message: "Erreur interne du serveur."});
     }
 };
 
