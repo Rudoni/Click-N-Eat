@@ -1,0 +1,93 @@
+.orders-container {
+    padding: 1rem;
+    background-color: #f9f9f9;
+    margin-bottom: 60px; /* Laisser de la place pour la BottomNavBar */
+  }
+  
+  .order-card {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .user-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+  }
+  
+  .order-details {
+    flex: 1;
+  }
+  
+  .order-details h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  
+  .order-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-left: 1rem;
+  }
+  
+  .refuse-btn {
+    background-color: #ff6666;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .accept-btn {
+    background-color: #66cc66;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .history-btn {
+    width: 100%;
+    background-color: #FFCC00;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem;
+    color: #000;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .order-actions .icon {
+    margin-right: 5px;
+    font-size: 1rem;
+    vertical-align: middle;
+  }
+  
+  /* Responsive adapt */
+  @media (max-width: 480px) {
+    .order-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .order-actions {
+      flex-direction: row;
+      margin-left: 0;
+      margin-top: 1rem;
+      width: 100%;
+      justify-content: space-around;
+    }
+  }
+  

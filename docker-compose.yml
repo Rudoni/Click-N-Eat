@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: rootpassword
       POSTGRES_DB: accountdb
     ports:
-      - "5433:5432"  # Port externe : interne
+      - "5433:5432"  # Externe:Interne
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -20,7 +20,7 @@ services:
       context: ./services/account/serveur_node
     container_name: account_service
     ports:
-      - "8080:3000"
+      - "3001:3001"
     depends_on:
       - postgres
     environment:
@@ -36,7 +36,7 @@ services:
       context: ./api_gateway
     container_name: api_gateway
     ports:
-      - "8081:8081"
+      - "3100:3100"
     depends_on:
       - account-service
     networks:
@@ -44,6 +44,7 @@ services:
     volumes:
       - ./api_gateway:/app
       - /app/node_modules
+
   frontend:
     build:
       context: ./frontend
@@ -52,14 +53,29 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-      - /app/node_modules  # Pour éviter les conflits de modules avec l’hôte
+      - /app/node_modules
     environment:
-      - CHOKIDAR_USEPOLLING=true  # Fix pour le hot reload dans Docker
+      - CHOKIDAR_USEPOLLING=true
     networks:
       - mynetwork
     depends_on:
       - api-gateway
 
+  mobile-livreur:
+    build:
+      context: ./mobile/livreur
+    container_name: mobile_livreur
+    ports:
+      - "3001:3000"  # Accessible via localhost:3001
+    volumes:
+      - ./mobile/livreur:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - mynetwork
+    depends_on:
+      - api-gateway
 
 volumes:
   pgdata:

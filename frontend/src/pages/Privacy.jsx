@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 const PrivacyPolicy = () => {
@@ -108,8 +108,9 @@ const PrivacyPolicy = () => {
 
       <section>
         <h2>7. Contact</h2>
-        <p>Pour toute question sur cette politique, vous pouvez nous contacter à <strong>contact@click-n-eat.com</strong>.</p>
-      </section>
+        <p>Vous pouvez nous contacter via la <Link to="/contact">page Contact</Link>.</p>
+    </section>
+
     </div>
   );
 };
