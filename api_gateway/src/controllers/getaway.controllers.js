@@ -40,8 +40,18 @@ exports.register = async (req, res) => {
 exports.authenticate = async (req, res) => {
 
     try {
-        console.log("req.body", req.body);
-        const response = await axios.get(`${SERVICE_URL_account}/authenticate`, req);
+        const token = req.headers.authorization || '';
+
+        // Configuration des headers
+        const config = {
+            headers: {
+                'Authorization': token,  // Ajout du token
+                'Content-Type': 'application/json' // Type de contenu
+            }
+        };
+
+        // Envoi de la requête avec les headers
+        const response = await axios.post(`${SERVICE_URL_account}/authenticate`, req.body, config);
         console.log(JSON.stringify(response));
         res.status(response.status).json(response.data);
     } catch (error) {
@@ -54,12 +64,3 @@ exports.authenticate = async (req, res) => {
         }
     }
 };
-
-exports.getUser = (req, res) => {
-    res.status(200).json({ id : 2, type: "2"});
-}
-
-//Fonction pou obtenir les informations sur un compte
-exports.getUserInfos = (req, res) => {
-    res.status(200).json({ id : 2, type: 3});
-}
