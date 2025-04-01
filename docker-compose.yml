@@ -77,22 +77,6 @@ services:
     depends_on:
       - api-gateway
 
-  mobile-livreur:
-    build:
-      context: ./mobile/livreur
-    container_name: mobile_livreur
-    ports:
-      - "3001:3000"  # Accessible via localhost:3001
-    volumes:
-      - ./mobile/livreur:/app
-      - /app/node_modules
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    networks:
-      - mynetwork
-    depends_on:
-      - api-gateway
-
 volumes:
   pgdata:
 

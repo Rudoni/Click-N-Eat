@@ -19,6 +19,7 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
+    let response;
 
     try {
         console.log("req.body", req.body);
@@ -56,4 +57,9 @@ exports.authenticate = async (req, res) => {
 
 exports.getUser = (req, res) => {
     res.status(200).json({ id : 2, type: "2"});
+}
+
+//Fonction pou obtenir les informations sur un compte
+exports.getUserInfos = (req, res) => {
+    res.status(200).json({ id : 2, type: 3});
 }
