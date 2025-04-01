@@ -7,15 +7,13 @@ const RestaurantDetails = () => {
   const [restaurant, setRestaurant] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
-
-
   const { addToCart } = useContext(CartContext);
 
   const restaurantsData = [
     {
       id: 1,
       name: "Le Gourmet",
-      image: "https://www.shutterstock.com/image-photo/plovdiv-bulgaria-july-30-2019-260nw-2552321417.jpg",
+      image: "/le-gourmet.png",
       description: "Cuisine gastronomique française raffinée.",
       address: {
         country: "France",
@@ -41,7 +39,7 @@ const RestaurantDetails = () => {
     {
       id: 2,
       name: "Pizza Express",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV3V_QmFRmB8xPPSOmShms0tMMMAH1G9i7pg&s",
+      image: "/pizza-express.png",
       description: "Pizzas artisanales cuites au feu de bois.",
       address: {
         country: "France",
@@ -66,7 +64,7 @@ const RestaurantDetails = () => {
     {
       id: 3,
       name: "Sushi World",
-      image: "https://oaformation.com/wp-content/uploads/2019/10/Besoins-clients-en-restauration.jpg",
+      image: "/sushi-world.png",
       description: "Spécialités japonaises fraîches et préparées minute.",
       address: {
         country: "France",
@@ -92,7 +90,7 @@ const RestaurantDetails = () => {
     {
       id: 4,
       name: "Burger House",
-      image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D",
+      image: "/burger-house.png",
       description: "Burgers faits maison et frites croustillantes.",
       address: {
         country: "France",
@@ -118,8 +116,14 @@ const RestaurantDetails = () => {
 
   useEffect(() => {
     document.title = "Détails du restaurant";
+    let isMounted = true;
+
     const resto = restaurantsData.find(r => r.id === parseInt(id));
-    if (resto) setRestaurant(resto);
+    if (isMounted && resto) setRestaurant(resto);
+
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   if (!restaurant) return <div className="loading">Chargement...</div>;
@@ -129,11 +133,19 @@ const RestaurantDetails = () => {
   };
 
   return (
-    <div className="restaurant-details-page">
+    <div key={restaurant.id} className="restaurant-details-page">
       <div className="back-arrow" onClick={() => navigate(-1)}>←</div>
 
       <div className="restaurant-header">
-        <img src={restaurant.image} alt={restaurant.name} className="main-image" />
+        <img
+          src={restaurant.image}
+          alt={restaurant.name}
+          className="main-image"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/default.jpg";
+          }}
+        />
         <h2 className="restaurant-name">{restaurant.name}</h2>
         <p className="restaurant-description">{restaurant.description}</p>
         <p className="restaurant-address">

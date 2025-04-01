@@ -1,6 +1,7 @@
 const axios = require("axios");
 
 const SERVICE_URL_account = "http://account-service:3001";
+const SERVICE_URL_restaurant = "http://account-service:3003";
 
 exports.login = async (req, res) => {
     try {
@@ -37,6 +38,7 @@ exports.register = async (req, res) => {
     }
 };
 
+
 exports.authenticate = async (req, res) => {
 
     try {
@@ -63,4 +65,25 @@ exports.authenticate = async (req, res) => {
             res.status(500).send('Erreur interne du serveur');
         }
     }
+
+};
+
+exports.addRestaurant = async (req, res) => {
+    let response;
+
+    try {
+        console.log("req.body", req.body);
+        response = await axios.post(`${SERVICE_URL_restaurant}/addRestaurant`, req.body);
+        console.log(response);
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        if (error.response && error.response.status === 400) {
+            res.status(400).json({ message: error.response.data.message });
+        } else {
+            // Si c'est une autre erreur, on envoie une réponse générique
+            console.error('Erreur Axios:', error.message);
+            res.status(500).send('Erreur interne du serveur');
+        }
+    }
+
 };
