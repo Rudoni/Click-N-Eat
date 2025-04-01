@@ -42,18 +42,14 @@ const RestaurantCreation = () => {
     
           const data = await response.json();
           if (response.ok) {
-            console.log(role)
-            if (role == 2) {
-              navigate("/create-restaurant");
-            } else {
               navigate("/dashboard");
             }
-          } else {
-            console.error("Erreur de connexion :", data.message);
+          else {
+            console.error("Erreur lors de la creation :", data.message);
           }
     
         } catch (error) {
-          console.error("Erreur de connexion :", error);
+          console.error("Erreur lors de la creation :", error);
         }
       };
 
