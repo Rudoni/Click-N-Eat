@@ -54,7 +54,7 @@ exports.authenticate = async (req, res) => {
 
         // Envoi de la requête avec les headers
         const response = await axios.post(`${SERVICE_URL_account}/authenticate`, req.body, config);
-        console.log(JSON.stringify(response));
+        console.log(response);
         res.status(response.status).json(response.data);
     } catch (error) {
         if (error.response && error.response.status === 400) {
