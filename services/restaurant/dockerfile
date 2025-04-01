@@ -1,7 +1,5 @@
 FROM node:18
 
-WORKDIR /app
-
 # Copie uniquement package.json
 COPY package.json package-lock.json ./
 
@@ -13,4 +11,4 @@ COPY . .
 
 EXPOSE 3003
 
-CMD ["node", "server-restaurant.js"]
+CMD ["node", "server_restaurant.js"]
