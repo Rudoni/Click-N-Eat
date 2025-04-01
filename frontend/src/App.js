@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import Command from './pages/Command';
 import PrivacyPolicy from './pages/Privacy';
 import RestaurantCreation from './pages/RestaurantCreation';
+import NotFound from './pages/NotFound';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/commander" element={<Command />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/create-restaurant" element={<RestaurantCreation />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </Router>

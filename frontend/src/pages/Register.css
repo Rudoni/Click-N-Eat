@@ -76,4 +76,12 @@
     font-size: 1rem;
     cursor: pointer;
   }
+
+  small {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 4px;
+  }
+  
   

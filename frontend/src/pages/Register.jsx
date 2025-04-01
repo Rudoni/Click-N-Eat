@@ -95,6 +95,7 @@ const Register = () => {
 
         <label>Mot de passe</label>
         <input id="password" name="password" type="password" onChange={handleChange} required />
+        <small>Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</small>
 
         <label>Confirmation mot de passe</label>
         <input id="password2" name="password2" type="password" onChange={handleChange} required />
