@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ReactDOM from 'react-dom/client';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
@@ -13,35 +12,29 @@ import PrivacyPolicy from './pages/Privacy';
 import RestaurantCreation from './pages/RestaurantCreation';
 import NotFound from './pages/NotFound';
 import RestaurantDetails from './pages/RestaurantDetails';
-import { CartProvider } from './context/CartContext';
-
 
 function App() {
   return (
     <Router>
-      <Header />
+     <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/commander" element={<Command />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/create-restaurant" element={<RestaurantCreation />} />
-        <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+        <Route path="/login" element={<Login key="/login" />} />
+        <Route path="/register" element={<Register key="/register" />} />
+        <Route path="/forgot-password" element={<ForgotPassword key="/forgot-password" />} />
+        <Route path="/contact" element={<Contact key="/contact" />} />
+        <Route path="/commander" element={<Command key="/commander" />} />
+        <Route path="/privacy" element={<PrivacyPolicy key="/privacy" />} />
+        <Route path="/create-restaurant" element={<RestaurantCreation key="/create-restaurant" />} />
+        <Route
+          path="/restaurant/:id"
+          element={<RestaurantDetails key={window.location.pathname} />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </Router>
   );
 }
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <CartProvider>
-    <App />
-  </CartProvider>
-);
 
 export default App;
