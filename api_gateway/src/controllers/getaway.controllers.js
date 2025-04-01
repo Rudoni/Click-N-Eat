@@ -35,3 +35,8 @@ exports.register = async (req, res) => {
         }
     }
 };
+
+//Fonction pou obtenir les informations sur un compte
+exports.getUserInfos = (req, res) => {
+    res.status(200).json({ id : 2, type: 3});
+}
