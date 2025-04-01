@@ -1,57 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useNavigate } from 'react';
 import './RestaurantCreation.css';
+import { useNavigate } from 'react-router-dom';
 
 const RestaurantCreation = () => {
   const [form, setForm] = useState({
     restaurantName: "",
     description: "",
     country: "",
-    city:"",
+    city: "",
     postalCode: "",
-    address: ""
+    address: "",
+    role: ""
   });
+  const [error, setError] = useState("");
 
-    useEffect(() => {
-      document.title = "Création du restaurant";
-    }, []);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-    
-      const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-      };
+  useEffect(() => {
+    document.title = "Création du restaurant";
+  }, []);
 
-      const handleSubmit = async (e) => {
-        e.preventDefault(); // Empêche le rechargement de la page
-    //TODO FAIRE LA REQUETE !!!!
-        try {
-          const response = await fetch("http://localhost:3100/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: form.email,
-              password: form.password,
-              password2: form.password2,
-              type: role,
-              nom: form.nom,
-              prenom: form.prenom,
-            }),
-          });
-    
-          const data = await response.json();
-          if (response.ok) {
-              navigate("/dashboard");
-            }
-          else {
-            console.error("Erreur lors de la creation :", data.message);
-          }
-    
-        } catch (error) {
-          console.error("Erreur lors de la creation :", error);
-        }
-      };
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const validateForm = () => {
+    if (!form.restaurantName || !form.description || !form.country || !form.city || !form.postalCode || !form.address || !form.role) {
+      alert("Tous les champs sont obligatoires !");
+      return false;
+    }
+    if (!/^\d{5}$/.test(form.postalCode)) {
+      alert("Le code postal doit contenir 5 chiffres.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      const response = await fetch("http://localhost:3100/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        navigate("/dashboard");
+      } else {
+        setError(data.message || "Une erreur est survenue.");
+      }
+    } catch (error) {
+      setError("Erreur lors de la connexion au serveur.");
+    }
+  };
 
   return (
     <div className="restaurant-creation-page">
@@ -75,6 +82,29 @@ const RestaurantCreation = () => {
         <label>Adresse</label>
         <input type="text" name="address" onChange={handleChange} required />
 
+        <label>Type de compte</label>
+        <div className="radio-group">
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="restaurant"
+              onChange={handleChange}
+              required
+            />
+            Restaurant
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="client"
+              onChange={handleChange}
+            />
+            Client
+          </label>
+        </div>
+
         <label>Image principale</label>
         <div className="image-upload main-image">
           <input type="file" name="mainImage" accept="image/*" />
@@ -84,6 +114,8 @@ const RestaurantCreation = () => {
         <div className="image-upload background-image">
           <input type="file" name="backgroundImage" accept="image/*" />
         </div>
+
+        {error && <p className="error-message">{error}</p>}
 
         <button type="submit" className="btn yellow">Créer le restaurant</button>
       </form>
