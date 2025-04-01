@@ -51,10 +51,14 @@ const Register = () => {
         }
       } else {
         console.error("Erreur de connexion :", data.message);
+        alert(data.message);
+
       }
 
     } catch (error) {
       console.error("Erreur de connexion :", error);
+      alert(" ligne 60 dans le code Erreur de connexion, adresse mail ou mot de passe erroné");
+
     }
   };
 

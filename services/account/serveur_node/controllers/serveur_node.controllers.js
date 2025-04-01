@@ -18,7 +18,7 @@ exports.register = async (req, res) => {
 
     const query = {
         // give the query a unique name
-        name: 'fetch-user',
+        name: 'register-user',
         text: 'insert into client (first_name, last_name, email, password_hash, user_type_id) values ($1, $2, $3, $4, $5)',
         values: [prenom, nom, email, hashed_password, type],
     }
@@ -48,26 +48,53 @@ exports.register = async (req, res) => {
 };
 
 
-exports.login = (req, res) => {
-    const { email, password } = req.body;
+exports.login = async (req, res) => {
 
-    console.log("login/aut", email, password);
+    const {email, password} = req.body;
 
-    if (email === "test@email.com" && password === "1234") {
-        return res.status(200).json({ message: "Connexion réussie !" });
-    } else {
-        return res.status(400).json({ message: "Email ou mot de passe incorrect." });
+    const query = {
+
+        name: 'login-user',
+        text: 'select * from client where email=($1)',
+        values: [email],
     }
+    try {
+
+        let response = await client.query(query)
+        if(response.rowCount != 1){
+            return res.status(400).json({message: "Pas de compte avec cette adresse"});
+        }
+        let hashed_password = response.rows[0].password_hash;
+        let user_id = response.rows[0].user_id;
+        let type = response.rows[0].user_type_id;
+
+        const accessToken = jwt.sign({ user_id: user_id, user_type:type, exp: Math.floor(Date.now() / 1000) + 1200 }, "CESI2025@Fisa");
+
+        console.log(response)
+
+        if(bcrypt.compare(password, hashed_password)) {
+            return res.status(200).json({message : "Connection réussie", authorization: accessToken});
+        } else {
+            return res.status(400).json({message: "Email ou mot de passe incorrect."});
+
+        }
+    } catch (e) {
+        console.log("error", e)
+        return res.status(400).json({message: "Erreur interne du serveur."});
+    }
+
 };
 
 exports.authenticate = (req, res) => {
+    console.log(req.headers["authorization"])
     let token = req.headers["authorization"].split("Bearer ")[1];
 
-
-    jwt.verify(token, process.env.ACCESS_JWT_KEY, (err, decoded) => {
+    jwt.verify(token, "CESI2025@Fisa", (err, decoded) => {
+        console.log(decoded);
         if(err){
+            console.log(err);
             return res.status(400).json({ message: "Your token is invalid!" });
         }
-        return res.status(200).json({ message: "You are authenticated!" });
+        return res.status(200).json({ message: "You are authenticated!", data: decoded });
     });
 };
