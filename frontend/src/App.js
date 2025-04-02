@@ -14,6 +14,7 @@ import NotFound from './pages/NotFound';
 import RestaurantDetails from './pages/RestaurantDetails';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import OrderConfirmation from './pages/OrderConfirmation';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/create-restaurant" element={<RestaurantCreation key="/create-restaurant" />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/confirmation" element={<OrderConfirmation />} />
         <Route
           path="/restaurant/:id"
           element={<RestaurantDetails key={window.location.pathname} />}
