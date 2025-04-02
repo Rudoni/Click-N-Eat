@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useNavigate } from 'react';
-import './RestaurantCreation.css';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './RestaurantCreation.css';
 
 const RestaurantCreation = () => {
   const [form, setForm] = useState({
@@ -41,7 +41,7 @@ const RestaurantCreation = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("http://localhost:3100/", {
+      const response = await fetch("http://localhost:3100/addRestaurant", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

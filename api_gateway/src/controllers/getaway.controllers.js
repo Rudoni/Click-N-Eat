@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 const SERVICE_URL_account = "http://account-service:3001";
-const SERVICE_URL_restaurant = "http://account-service:3003";
+const SERVICE_URL_restaurant = "http://restaurant-service:3003";
 
 exports.login = async (req, res) => {
     try {

@@ -5,16 +5,14 @@ const SECRET_KEY = "votre_cle_secrete"; // À récupérer dans le fichier .env
 exports.addRestaurant = async (req, res) => {
     const {restaurantName, description, country, city, postalCode, address, mainImage, backgroundImage} = req.body;
 
-    const tokenUser = sessionStorage.getItem("token");
+    const token = req.headers.authorization;
 
     const response = await fetch("http://localhost:3100/authenticate", {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-          token : tokenUser,
-        }),
       });
 
     console.log(response);
