@@ -86,7 +86,17 @@ exports.login = async (req, res) => {
 };
 
 exports.authenticate = (req, res) => {
-    console.log(req.headers["authorization"])
+
+    if (!req.headers["authorization"]) {
+        return res.status(400).json({ message: "Authorization header is missing!" });
+    }
+
+    const authHeader = req.headers["authorization"];
+    if (!authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "format de token invalide" });
+    }
+
+    console.log("token", req.headers["authorization"])
     let token = req.headers["authorization"].split("Bearer ")[1];
 
     jwt.verify(token, "CESI2025@Fisa", (err, decoded) => {

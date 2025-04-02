@@ -42,9 +42,19 @@ exports.register = async (req, res) => {
 exports.authenticate = async (req, res) => {
 
     try {
-        console.log("req.body", req.body);
-        const response = await axios.get(`${SERVICE_URL_account}/authenticate`, req);
-        console.log(JSON.stringify(response));
+        const token = req.headers.authorization || '';
+
+        // Configuration des headers
+        const config = {
+            headers: {
+                'Authorization': token,  // Ajout du token
+                'Content-Type': 'application/json' // Type de contenu
+            }
+        };
+
+        // Envoi de la requête avec les headers
+        const response = await axios.post(`${SERVICE_URL_account}/authenticate`, req.body, config);
+        console.log(response);
         res.status(response.status).json(response.data);
     } catch (error) {
         if (error.response && error.response.status === 400) {

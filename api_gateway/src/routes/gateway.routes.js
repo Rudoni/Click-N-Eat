@@ -5,4 +5,5 @@ module.exports = function(app) {
     app.post("/login", authController.login);
     app.post("/addRestaurant", authController.addRestaurant)
     app.post("/authenticate", authController.authenticate);
+
 };

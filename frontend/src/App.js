@@ -12,6 +12,8 @@ import PrivacyPolicy from './pages/Privacy';
 import RestaurantCreation from './pages/RestaurantCreation';
 import NotFound from './pages/NotFound';
 import RestaurantDetails from './pages/RestaurantDetails';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Route path="/commander" element={<Command key="/commander" />} />
         <Route path="/privacy" element={<PrivacyPolicy key="/privacy" />} />
         <Route path="/create-restaurant" element={<RestaurantCreation key="/create-restaurant" />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route
           path="/restaurant/:id"
           element={<RestaurantDetails key={window.location.pathname} />}
