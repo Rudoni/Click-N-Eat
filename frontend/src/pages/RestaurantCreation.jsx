@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './RestaurantCreation.css';
 import { useNavigate } from 'react-router-dom';
-
 
 
 const RestaurantCreation = () => {
@@ -43,7 +43,7 @@ const RestaurantCreation = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("http://localhost:3100/", {
+      const response = await fetch("http://localhost:3100/addRestaurant", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
