@@ -1,20 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import ForgotPassword from './pages/ForgotPassword';
-import Register from './pages/Register';
-import Contact from './pages/Contact';
+import Home from './pages/Common/Home';
+import Login from './pages/Common/Login';
+import ForgotPassword from './pages/Common/ForgotPassword';
+import Register from './pages/Common/Register';
+import Contact from './pages/Common/Contact';
 import Header from './components/Header'; 
 import Footer from './components/Footer';
-import Command from './pages/Command';
-import PrivacyPolicy from './pages/Privacy';
-import RestaurantCreation from './pages/RestaurantCreation';
-import NotFound from './pages/NotFound';
-import RestaurantDetails from './pages/RestaurantDetails';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import OrderConfirmation from './pages/OrderConfirmation';
+import Command from './pages/Client/Command';
+import PrivacyPolicy from './pages/Common/Privacy';
+import RestaurantCreation from './pages/Restaurateur/RestaurantCreation';
+import NotFound from './pages/Common/NotFound';
+import RestaurantDetails from './pages/Restaurateur/RestaurantDetails';
+import Cart from './pages/Client/Cart';
+import Checkout from './pages/Client/Checkout';
+import OrderConfirmation from './pages/Client/OrderConfirmation';
+import Carte from './pages/Restaurateur/Carte';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/confirmation" element={<OrderConfirmation />} />
+        <Route path="/carte" element={<Carte/>} />
         <Route
           path="/restaurant/:id"
           element={<RestaurantDetails key={window.location.pathname} />}
