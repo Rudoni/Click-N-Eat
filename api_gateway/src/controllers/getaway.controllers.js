@@ -1,7 +1,67 @@
 const axios = require("axios");
+const { response } = require("express");
 
 const SERVICE_URL_account = "http://account-service:3001";
 const SERVICE_URL_restaurant = "http://restaurant-service:3003";
+
+async function authenticated(token) {
+    try {
+        if (token) {
+
+            console.log("token authenticate", token)
+
+            // Configuration des headers
+            const config = {
+                headers: {
+                    'Authorization': token,  // Ajout du token
+                    'Content-Type': 'application/json' // Type de contenu
+                }
+            };
+
+            const response = await axios.post(`${SERVICE_URL_account}/authenticate`, {}, config);
+
+            // console.log("rep auth", response)
+            if (response.status == 200) {
+                return { response: true, info: response.data.data }
+            } else {
+                return { response: false }
+            }
+
+        } else {
+            return { response: false }
+        }
+    } catch (error) {
+        console.log("error auth", error)
+        return { response: false }
+
+    }
+
+}
+
+exports.test = async (req, res) => {
+    try {
+
+        const token = req.headers.authorization || '';
+
+        auth = await authenticated(token)
+
+        if (auth.response) {
+
+            req.body.data = auth.info
+            console.log(req.body)
+
+            const response = await axios.post(`${SERVICE_URL_restaurant}/test`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "vous n'etes pas authentifié" });
+        }
+    } catch (error) {
+        console.error('Erreur Axios:', error.message);
+        res.status(500).send('Erreur interne du serveur');
+    }
+};
+
 
 exports.login = async (req, res) => {
     try {
@@ -44,6 +104,8 @@ exports.authenticate = async (req, res) => {
     try {
         const token = req.headers.authorization || '';
 
+        console.log("token authenticate", token)
+
         // Configuration des headers
         const config = {
             headers: {
@@ -54,7 +116,7 @@ exports.authenticate = async (req, res) => {
 
         // Envoi de la requête avec les headers
         const response = await axios.post(`${SERVICE_URL_account}/authenticate`, req.body, config);
-        console.log(response);
+        console.log("response auth", response);
         res.status(response.status).json(response.data);
     } catch (error) {
         if (error.response && error.response.status === 400) {
@@ -69,21 +131,21 @@ exports.authenticate = async (req, res) => {
 };
 
 exports.addRestaurant = async (req, res) => {
-    let response;
+    console.log("aaaaaaaaaaaaaaaaaaaadd")
 
-    try {
-        console.log("req.body", req.body);
-        response = await axios.post(`${SERVICE_URL_restaurant}/addRestaurant`, req.body);
-        console.log(response);
-        res.status(response.status).json(response.data);
-    } catch (error) {
-        if (error.response && error.response.status === 400) {
-            res.status(400).json({ message: error.response.data.message });
-        } else {
-            // Si c'est une autre erreur, on envoie une réponse générique
-            console.error('Erreur Axios:', error.message);
-            res.status(500).send('Erreur interne du serveur');
-        }
-    }
+    const token = req.headers.authorization;
+    console.log(token)
 
-};
+    const response = await fetch(`${SERVICE_URL_restaurant}/addRestaurant`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: req.body,
+    });
+
+    console.log(response)
+
+    res.status(200).json({ message: "test add restaurant" })
+}
