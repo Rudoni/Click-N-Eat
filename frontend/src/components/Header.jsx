@@ -31,8 +31,9 @@ const Header = () => {
         console.error("Erreur réseau :", error);
       }
     };
-
-    fetchUserInfos();
+    if(token){
+      fetchUserInfos();
+    }
   }, []);
   
   return (

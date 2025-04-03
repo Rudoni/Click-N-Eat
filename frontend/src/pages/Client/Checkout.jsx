@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import './Checkout.css';
-import { CartContext } from '../context/CartContext';
+import { CartContext } from '../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
 

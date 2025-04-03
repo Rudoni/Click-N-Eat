@@ -3,19 +3,17 @@ const client = require("../db");
 const SECRET_KEY = "votre_cle_secrete"; // À récupérer dans le fichier .env
 
 exports.addRestaurant = async (req, res) => {
-    const {restaurantName, description, country, city, postalCode, address, mainImage, backgroundImage} = req.body;
+    const {restaurantName, description, country, city, postalCode, address, mainImage, backgroundImage, data} = req.body;
 
-    const token = req.headers.authorization;
+    console.log(data)
 
-    const response = await fetch("http://localhost:3100/authenticate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-      });
+    try{
 
-    console.log(response);
+    res.status(200).json({ message: "response.data.message"});
+    }catch(e){
+      res.status(400).json({message: "erreur "+ e.message})
+    }
+
 
     // const queryInsert = {
     //     // give the query a unique name
@@ -43,3 +41,9 @@ exports.addRestaurant = async (req, res) => {
     //     return res.status(400).json({message: "Erreur interne du serveur."});
     // }
 };
+
+exports.test_api = (req, res) =>{
+
+  console.log(req.body)
+  res.status(200).json({message: "OK"})
+}
