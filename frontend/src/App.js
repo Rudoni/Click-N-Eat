@@ -15,6 +15,7 @@ import RestaurantDetails from './pages/RestaurantDetails';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderConfirmation from './pages/OrderConfirmation';
+// import Profile from './pages/client/Profile';
 
 function App() {
   return (

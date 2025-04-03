@@ -45,8 +45,6 @@ const Header = () => {
 
       <nav className={`nav ${open ? "open" : ""}`}>
         <Link to="/contact" className="link" onClick={() => setOpen(false)}>Contact</Link>
-        <Link to="/login" className="btn yellow" onClick={() => setOpen(false)}>Déconnexion</Link>
-
         {!user ? (
           <Link to="/login" className="btn yellow" onClick={() => setOpen(false)}>Connexion</Link>
         ) : (
@@ -57,6 +55,7 @@ const Header = () => {
               <>
               <Link to="/commander" className="btn light" onClick={() => setOpen(false)}>Commander</Link>
               <Link to="/cart" className="btn light" onClick={() => setOpen(false)}>Panier</Link>
+              <Link to="/profile" className="btn light" onClick={() => setOpen(false)}>Profile</Link>
               </>
             )}
 

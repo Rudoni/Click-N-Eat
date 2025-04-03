@@ -108,3 +108,39 @@ exports.authenticate = (req, res) => {
         return res.status(200).json({ message: "You are authenticated!", data: decoded });
     });
 };
+
+
+exports.profile = async (req, res) => {
+    const userId = req.body.user_id;
+
+    if (!userId) {
+        return res.status(400).json({ message: "User ID is missing in the request body!" });
+    }
+
+    const query = {
+        name: 'get-user-profile',
+        text: 'SELECT * FROM client WHERE user_id = $1',
+        values: [userId],
+    };
+
+    try {
+        let response = await client.query(query);
+        console.log(response);
+
+        if (response.rowCount !== 1) {
+            return res.status(400).json({ message: "Aucun compte trouvé avec cet ID" });
+        }
+
+        let user = response.rows[0];
+        delete user.password_hash;
+        delete user.user_id;
+
+        return res.status(200).json({ message: "Récupération des informations réussie", data: user });
+    } catch (e) {
+        console.log("error", e);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
+    }
+};
+    
+
+
