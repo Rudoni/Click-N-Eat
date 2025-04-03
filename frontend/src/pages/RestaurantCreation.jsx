@@ -40,10 +40,13 @@ const RestaurantCreation = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
+    const token = localStorage.getItem("token")
+
     try {
       const response = await fetch("http://localhost:3100/addRestaurant", {
         method: "POST",
         headers: {
+          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(form),
