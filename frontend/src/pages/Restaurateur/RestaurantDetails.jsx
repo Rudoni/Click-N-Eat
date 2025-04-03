@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './RestaurantDetails.css';
-import { CartContext } from '../context/CartContext'; 
+import { CartContext } from '../../context/CartContext'; 
 
 const RestaurantDetails = () => {
   const [restaurant, setRestaurant] = useState(null);

@@ -1,0 +1,86 @@
+.order-confirmation-page {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .order-confirmation-page h2 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #2ecc71;
+    margin-bottom: 16px;
+  }
+  
+  .order-confirmation-page p {
+    font-size: 16px;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  .order-confirmation-page strong {
+    font-weight: bold;
+    color: #111;
+  }
+  
+  /* Bouton jaune style identique à login */
+  .btn-show-code {
+    background-color: #ffcc00;
+    color: #000;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+  
+  .btn-show-code:hover {
+    opacity: 0.9;
+  }
+  
+  /* Code de confirmation */
+  .confirmation-code-box {
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .code-label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .code-value {
+    font-size: 28px;
+    letter-spacing: 4px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 5px;
+  }
+  
+  .code-info {
+    font-size: 14px;
+    color: #777;
+  }
+  
+  @media (max-width: 600px) {
+    .order-confirmation-page {
+      margin: 20px;
+      padding: 20px;
+    }
+  
+    .btn-show-code {
+      width: 100%;
+    }
+  }
+  

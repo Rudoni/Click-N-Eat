@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RestaurantCreation.css';
 
+
 const RestaurantCreation = () => {
   const [form, setForm] = useState({
     restaurantName: "",
