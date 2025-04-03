@@ -38,7 +38,7 @@ async function authenticated(token) {
 
 }
 
-exports.test = async (req, res) => {
+exports.addRestaurant = async (req, res) => {
     try {
 
         const token = req.headers.authorization || '';
@@ -50,7 +50,7 @@ exports.test = async (req, res) => {
             req.body.data = auth.info
             console.log(req.body)
 
-            const response = await axios.post(`${SERVICE_URL_restaurant}/test`, req.body);
+            const response = await axios.post(`${SERVICE_URL_restaurant}/addRestaurant`, req.body);
 
             res.status(response.status).json(response.data);
         } else {
@@ -129,23 +129,3 @@ exports.authenticate = async (req, res) => {
     }
 
 };
-
-exports.addRestaurant = async (req, res) => {
-    console.log("aaaaaaaaaaaaaaaaaaaadd")
-
-    const token = req.headers.authorization;
-    console.log(token)
-
-    const response = await fetch(`${SERVICE_URL_restaurant}/addRestaurant`, {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
-        body: req.body,
-    });
-
-    console.log(response)
-
-    res.status(200).json({ message: "test add restaurant" })
-}
