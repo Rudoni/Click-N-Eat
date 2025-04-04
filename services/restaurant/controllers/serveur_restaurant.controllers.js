@@ -83,3 +83,46 @@ exports.test_api = (req, res) =>{
   console.log(req.body)
   res   .status(200).json({message: "OK"})
 }
+
+exports.getRestaurantInfos = async (req, res) => {
+
+    const {restaurantName, data} = req.body;
+
+    const user_id = data.user_id;
+
+    let query;
+    if (restaurantName) {
+        query = {
+            name: 'get-restau-info-id',
+            text: 'SELECT * FROM restaurant WHERE restaurant_name = $1',
+            values: [restaurantName],
+        };
+    } else if (user_id) {
+        query = {
+            name: 'get-restau-info-nom',
+            text: 'SELECT * FROM restaurant WHERE user_id = $1',
+            values: [user_id],
+        };
+    } else {
+        return res.status(400).json({ message: "restaurantId ou restaurantName requis" });
+    }
+
+    console.log(query)
+
+    try {
+        const response = await client.query(query);
+
+        if (response.rows.length === 0) {
+            return res.status(404).json({ message: "Restaurant non trouvé" });
+        }
+
+        const restaurant = response.rows[0];
+
+        console.log(response)
+
+        return res.status(200).json({ data: restaurant });
+    } catch (e) {
+        console.error("Erreur lors de la récupération du restaurant:", e);
+        return res.status(500).json({ message: "Erreur interne du serveur" });
+    }
+};

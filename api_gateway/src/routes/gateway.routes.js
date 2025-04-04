@@ -10,6 +10,7 @@ module.exports = function(app) {
     app.post("/profile", authController.getProfile);
     app.put("/profile/update", authController.updateProfile);
     app.delete("/account/delete", authController.deleteAccount);
+    app.post("/getRestaurantInfos", authController.getRestaurantInfos);
 
     // Address routes
     app.post("/address/create", authController.createAddress);
