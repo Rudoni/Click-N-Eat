@@ -169,7 +169,7 @@ const RestaurantDetails = () => {
                 ))}
               </ul>
               <button className="order-btn" onClick={() => addToCart(menu, 'menu')}>
-                Commander ce menu
+                Ajouter au panier
               </button>
             </div>
           );
@@ -185,7 +185,7 @@ const RestaurantDetails = () => {
               <h4>{article.name}</h4>
               <p>{article.type} - {article.price} €</p>
               <button className="order-btn" onClick={() => addToCart(article, 'article')}>
-                Commander cet article
+                Ajouter au panier
               </button>
             </div>
           ))}

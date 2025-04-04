@@ -4,10 +4,6 @@ CREATE DATABASE account;
 -- Connect to the account database
 \c account;
 
--- Create user for the account database
-CREATE USER account_usr WITH ENCRYPTED PASSWORD 'account_pwd';
-
-
 -- Create Users table
 CREATE TABLE client (
                         user_id SERIAL PRIMARY KEY,
@@ -25,16 +21,28 @@ CREATE TABLE user_type (
                            user_type_name VARCHAR(50) NOT NULL
 );
 
+
+
 -- Create an index on email for faster lookups
 CREATE INDEX idx_users_email ON client(email);
 
+CREATE TABLE adress (
+    adress_id SERIAL PRIMARY KEY,
+    country VARCHAR(100) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL,
+    adress_name VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL,
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id)
+        REFERENCES client(user_id)
+        ON DELETE CASCADE
+);
 
--- Apply permissions after table creation
-GRANT USAGE ON SCHEMA public TO account_usr;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO account_usr;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO account_usr;
 
 insert into user_type (user_type_name) values ('Client');
 insert into user_type (user_type_name) values ('Restaurateur');
 insert into user_type (user_type_name) values ('Développeur tiers');
 insert into user_type (user_type_name) values ('Livreur');
+insert into user_type (user_type_name) values ('Developpeur interne');
+insert into user_type (user_type_name) values ('Commercial');
