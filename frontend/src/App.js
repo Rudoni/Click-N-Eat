@@ -17,6 +17,8 @@ import RestaurantCreation from './pages/Restaurateur/RestaurantCreation';
 import OrderConfirmation from './pages/Client/OrderConfirmation';
 import Carte from './pages/Restaurateur/Carte';
 import CreateArticle from './pages/Restaurateur/create-article';
+import RestaurantSettings from './pages/Restaurateur/RestaurantSettings';
+
 
 
 
@@ -38,10 +40,8 @@ function App() {
         <Route path="/confirmation" element={<OrderConfirmation />} />
         <Route path="/carte" element={<Carte/>} />
         <Route path="/create-article" element={<CreateArticle />}/>
-        <Route
-          path="/restaurant/:id"
-          element={<RestaurantDetails key={window.location.pathname} />}
-        />
+        <Route path="/restaurant-settings" element={<RestaurantSettings/>} />
+        <Route path="/restaurant/:id" element={<RestaurantDetails key={window.location.pathname} />}/>
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
