@@ -90,11 +90,12 @@ const CreateArticle = () => {
             Type :
             <select name="type" value={formData.type} onChange={handleChange} required>
               <option value="">-- Sélectionner --</option>
-              <option value="boisson">Boisson</option>
-              <option value="dessert">Dessert</option>
-              <option value="accompagnement">Accompagnement</option>
-              <option value="plat">Plat principal</option>
-            </select>
+              <option value="1">Boisson</option>
+              <option value="2">Dessert</option>
+              <option value="3">Entree</option>
+              <option value="4">Plat</option>
+              <option value="5">Accompagnement</option>
+            </select> 
           </label>
 
           <label>
