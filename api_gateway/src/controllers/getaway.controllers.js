@@ -3,6 +3,7 @@ const { response } = require("express");
 
 const SERVICE_URL_account = "http://account-service:3001";
 const SERVICE_URL_restaurant = "http://restaurant-service:3003";
+const SERVICE_URL_order = "http://order-service:3004";
 
 async function authenticated(token) {
     try {
@@ -89,7 +90,7 @@ exports.register = async (req, res) => {
         res.status(response.status).json(response.data);
     } catch (error) {
         if (error.response && error.response.status === 400) {
-            res.status(400).json({ message: error.response.data.message });
+            res.status(400).json({message: error.response.data.message});
         } else {
             // Si c'est une autre erreur, on envoie une réponse générique
             console.error('Erreur Axios:', error.message);
@@ -128,4 +129,28 @@ exports.authenticate = async (req, res) => {
         }
     }
 
+};
+
+exports.testOrder = async (req, res) => {
+    try {
+
+        const token = req.headers.authorization || '';
+
+        auth = await authenticated(token)
+
+        if (auth.response) {
+
+            req.body.data = auth.info
+            console.log(req.body)
+
+            const response = await axios.post(`${SERVICE_URL_order}/test`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "vous n'etes pas authentifié" });
+        }
+    } catch (error) {
+        console.error('Erreur Axios:', error.message);
+        res.status(500).send('Erreur interne du serveur');
+    }
 };
