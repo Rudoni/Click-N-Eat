@@ -40,7 +40,7 @@ exports.addRestaurant = async (req, res) => {
 };
 
 exports.addArticle = async (req, res) => {
-    const {name, type, price, solo} = req.body;
+    const {name, type, price, solo, data} = req.body;
 
     try{
 
@@ -49,7 +49,7 @@ exports.addArticle = async (req, res) => {
       res.status(400).json({message: "erreur "+ e.message})
     }
 
-    console.log(name+", "+type+", "+price+", "+solo)
+    console.log(name+", "+type+", "+price+", "+solo+", "+data);
 
     // const queryInsert = {
     //     // give the query a unique name

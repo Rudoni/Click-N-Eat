@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './create-article.css';
 
 const CreateArticle = () => {
@@ -9,6 +10,14 @@ const CreateArticle = () => {
     price: '',
     solo: false,
   });
+
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Création de l'article";
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -25,10 +34,31 @@ const CreateArticle = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const token = localStorage.getItem("token")
     // Ici tu envoies `formData` + image si besoin
     console.log('Données soumises :', formData);
+    try {
+      const response = await fetch("http://localhost:3100/addArticle", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        navigate("/dashboard");
+      } else {
+        setError(data.message || "Une erreur est survenue.");
+      }
+    } catch (error) {
+      setError("Erreur lors de la connexion au serveur.");
+    }
   };
 
   return (
