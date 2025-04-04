@@ -46,7 +46,7 @@ const Carte = () => {
               <h4>{article.name}</h4>
               <button className="btn yellow" onClick={() => navigate(`/edit-article/${article.id}`)}>Éditer</button>            </div>
           ))}
-          <div className="grid-item add-item" onClick={() => navigate('/add-article')}>
+          <div className="grid-item add-item" onClick={() => navigate('/create-article')}>
             <img src={plusIcon} alt="Ajouter" />
             <h4>Ajouter un article</h4>
           </div>

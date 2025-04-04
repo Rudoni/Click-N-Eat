@@ -111,36 +111,118 @@ exports.authenticate = (req, res) => {
 
 
 exports.profile = async (req, res) => {
-    const userId = req.body.user_id;
-
+    const { data } = req.body;
+    const userId = data?.user_id;
+  
     if (!userId) {
-        return res.status(400).json({ message: "User ID is missing in the request body!" });
+      return res.status(400).json({ message: "User ID is missing in the request body!" });
     }
-
-    const query = {
+  
+    try {
+      // Requête pour récupérer les infos du client
+      const userQuery = {
         name: 'get-user-profile',
         text: 'SELECT * FROM client WHERE user_id = $1',
         values: [userId],
-    };
-
-    try {
-        let response = await client.query(query);
-        console.log(response);
-
-        if (response.rowCount !== 1) {
-            return res.status(400).json({ message: "Aucun compte trouvé avec cet ID" });
+      };
+  
+      const userResponse = await client.query(userQuery);
+  
+      if (userResponse.rowCount !== 1) {
+        return res.status(400).json({ message: "Aucun compte trouvé avec cet ID" });
+      }
+  
+      let user = userResponse.rows[0];
+      delete user.password_hash;
+  
+      // Requête pour récupérer les adresses liées à ce user
+      const addressQuery = {
+        name: 'get-user-addresses',
+        text: 'SELECT * FROM adress WHERE user_id = $1',
+        values: [userId],
+      };
+  
+      const addressResponse = await client.query(addressQuery);
+      const addresses = addressResponse.rows;
+  
+      // Retour combiné
+      return res.status(200).json({
+        message: "Récupération des informations réussie",
+        data: {
+          ...user,
+          addresses: addresses
         }
-
-        let user = response.rows[0];
-        delete user.password_hash;
-        delete user.user_id;
-
-        return res.status(200).json({ message: "Récupération des informations réussie", data: user });
+      });
+  
     } catch (e) {
-        console.log("error", e);
-        return res.status(500).json({ message: "Erreur interne du serveur." });
+      console.error("Erreur dans la récupération du profil :", e);
+      return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 };
+
+exports.updateProfile = async (req, res) => {
+  const { user_id, first_name, last_name, email, password } = req.body;
+
+  if (!user_id || !first_name || !last_name || !email) {
+    return res.status(400).json({ message: "Champs requis manquants." });
+  }
+
+  try {
+    // Si mot de passe fourni, on le hash
+    let query;
+    if (password) {
+      if (!password.match(/(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}/)) {
+        return res.status(400).json({ message: "Mot de passe non sécurisé." });
+      }
+
+      const hash = await bcrypt.hash(password, 10);
+      query = {
+        text: `UPDATE client SET first_name=$1, last_name=$2, email=$3, password_hash=$4 WHERE user_id=$5`,
+        values: [first_name, last_name, email, hash, user_id]
+      };
+    } else {
+      query = {
+        text: `UPDATE client SET first_name=$1, last_name=$2, email=$3 WHERE user_id=$4`,
+        values: [first_name, last_name, email, user_id]
+      };
+    }
+
+    const result = await client.query(query);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    res.status(200).json({ message: "Profil mis à jour avec succès." });
+  } catch (e) {
+    console.error("Erreur updateProfile :", e);
+    res.status(500).json({ message: "Erreur interne du serveur." });
+  }
+};
+
+
+exports.deleteAccount = async (req, res) => {
+    const { user_id } = req.body;
+  
+    if (!user_id) {
+      return res.status(400).json({ message: "ID utilisateur manquant." });
+    }
+  
+    try {
+      const query = {
+        text: 'DELETE FROM client WHERE user_id = $1',
+        values: [user_id],
+      };
+  
+      await client.query(query);
+      return res.status(200).json({ message: "Compte supprimé avec succès." });
+    } catch (error) {
+      console.error("Erreur suppression compte :", error);
+      return res.status(500).json({ message: "Erreur interne lors de la suppression du compte." });
+    }
+  };
+  
+  
     
 
 

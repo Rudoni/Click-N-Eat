@@ -63,7 +63,7 @@ const Header = () => {
             {/* Partie Restaurateur */}
             {user.user_type == 2 && (
               <>
-                <Link to="/parametres" className="btn light" onClick={() => setOpen(false)}>Paramètres Généraux</Link>
+                <Link to="/restaurant-settings" className="btn light" onClick={() => setOpen(false)}>Paramètres Généraux</Link>
                 <Link to="/tableau-de-bord" className="btn light" onClick={() => setOpen(false)}>Tableau de bord</Link>
                 <Link to="/commandes" className="btn light" onClick={() => setOpen(false)}>Les commandes</Link>
                 <Link to="/carte" className="btn light" onClick={() => setOpen(false)}>La carte</Link>

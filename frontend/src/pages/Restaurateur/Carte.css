@@ -27,6 +27,21 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
   }
+
+  .grid-item img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .menu-image {
+    width: 120px;         /* Largeur fixe pour l'image */
+    height: 120px;        /* Hauteur fixe pour l'image */
+    object-fit: cover;    /* L'image occupe l'espace sans déformation, en étant recadrée si nécessaire */
+    border-radius: 50%;   /* Si tu veux des bords arrondis */
+  }
+  
   
   .grid-item:hover {
     transform: scale(1.05);

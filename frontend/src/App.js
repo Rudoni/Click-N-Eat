@@ -7,15 +7,18 @@ import Register from './pages/Common/Register';
 import Contact from './pages/Common/Contact';
 import Header from './components/Header'; 
 import Footer from './components/Footer';
-import Command from './pages/Command';
-import PrivacyPolicy from './pages/Privacy';
-import NotFound from './pages/NotFound';
-import RestaurantDetails from './pages/RestaurantDetails';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
+import Command from './pages/client/Command';
+import PrivacyPolicy from './pages/Common/Privacy';
+import NotFound from './pages/Common/NotFound';
+import RestaurantDetails from './pages/Restaurateur/RestaurantDetails';
+import Cart from './pages/client/Cart';
+import Checkout from './pages/client/Checkout';
 import RestaurantCreation from './pages/Restaurateur/RestaurantCreation';
-import OrderConfirmation from './pages/Client/OrderConfirmation';
+//import OrderConfirmation from './pages/Client/OrderConfirmation';
 import Carte from './pages/Restaurateur/Carte';
+import CreateArticle from './pages/Restaurateur/create-article';
+import RestaurantSettings from './pages/Restaurateur/RestaurantSettings';
+import Profile from './pages/client/Profile';
 
 
 function App() {
@@ -33,12 +36,11 @@ function App() {
         <Route path="/create-restaurant" element={<RestaurantCreation key="/create-restaurant" />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/confirmation" element={<OrderConfirmation />} />
         <Route path="/carte" element={<Carte/>} />
-        <Route
-          path="/restaurant/:id"
-          element={<RestaurantDetails key={window.location.pathname} />}
-        />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/create-article" element={<CreateArticle />}/>
+        <Route path="/restaurant-settings" element={<RestaurantSettings/>} />
+        <Route path="/restaurant/:id" element={<RestaurantDetails key={window.location.pathname} />}/>
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
