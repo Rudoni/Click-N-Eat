@@ -7,15 +7,17 @@ import Register from './pages/Common/Register';
 import Contact from './pages/Common/Contact';
 import Header from './components/Header'; 
 import Footer from './components/Footer';
-import Command from './pages/Command';
-import PrivacyPolicy from './pages/Privacy';
-import NotFound from './pages/NotFound';
-import RestaurantDetails from './pages/RestaurantDetails';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
+import Command from './pages/Client/Command';
+import PrivacyPolicy from './pages/Common/Privacy';
+import NotFound from './pages/Common/NotFound';
+import RestaurantDetails from './pages/Restaurateur/RestaurantDetails';
+import Cart from './pages/Client/Cart';
+import Checkout from './pages/Client/Checkout';
 import RestaurantCreation from './pages/Restaurateur/RestaurantCreation';
 import OrderConfirmation from './pages/Client/OrderConfirmation';
 import Carte from './pages/Restaurateur/Carte';
+import CreateArticle from './pages/Restaurateur/create-article';
+
 
 
 function App() {
@@ -35,6 +37,7 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/confirmation" element={<OrderConfirmation />} />
         <Route path="/carte" element={<Carte/>} />
+        <Route path="/create-article" element={<CreateArticle />}/>
         <Route
           path="/restaurant/:id"
           element={<RestaurantDetails key={window.location.pathname} />}
