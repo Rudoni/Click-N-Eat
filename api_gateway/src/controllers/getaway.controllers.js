@@ -5,6 +5,7 @@ const SERVICE_URL_account = "http://account-service:3001";
 const SERVICE_URL_restaurant = "http://restaurant-service:3003";
 
 async function authenticated(token) {
+    console.log("token", token)
     try {
         if (token) {
 
@@ -129,3 +130,125 @@ exports.authenticate = async (req, res) => {
     }
 
 };
+
+
+exports.getProfile = async (req, res) => {
+    try {
+
+        const token = req.headers.authorization || '';
+
+        auth = await authenticated(token)
+
+        if (auth.response) {
+
+            req.body.data = auth.info
+            console.log(req.body)
+
+            const response = await axios.post(`${SERVICE_URL_account}/profile`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "vous n'etes pas authentifié" });
+        }
+    } catch (error) {
+        console.error('Erreur Axios:', error.message);
+        res.status(500).send('Erreur interne du serveur');
+    }
+};
+
+exports.updateProfile = async (req, res) => {
+    try {
+      const token = req.headers.authorization || '';
+      const auth = await authenticated(token);
+  
+      if (auth.response) {
+        req.body.user_id = auth.info.user_id;
+  
+        const response = await axios.put(`${SERVICE_URL_account}/profile/update`, req.body, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+  
+        res.status(response.status).json(response.data);
+      } else {
+        res.status(400).json({ message: "vous n'êtes pas authentifié" });
+      }
+    } catch (error) {
+      console.error("Erreur Axios (updateProfile):", error.message);
+      res.status(500).json({ message: "Erreur interne du serveur" });
+    }
+};
+
+exports.deleteAccount = async (req, res) => {
+    try {
+      const token = req.headers.authorization || '';
+      const auth = await authenticated(token);
+  
+      if (!auth.response) {
+        return res.status(403).json({ message: "Non autorisé." });
+      }
+  
+      const response = await axios.delete(`${SERVICE_URL_account}/account/delete`, {
+        data: { user_id: auth.info.user_id },
+      });
+  
+      return res.status(200).json(response.data);
+    } catch (error) {
+      console.error("Erreur suppression via gateway :", error);
+      return res.status(500).json({ message: "Erreur serveur" });
+    }
+  };
+  
+  
+
+
+
+// address
+exports.createAddress = async (req, res) => {
+    try {
+      const token = req.headers.authorization || '';
+      const auth = await authenticated(token);
+  
+      if (auth.response) {
+        req.body.user_id = auth.info.user_id;
+  
+        const response = await axios.post(`${SERVICE_URL_account}/address/create`, req.body, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+  
+        res.status(response.status).json(response.data);
+      } else {
+        res.status(400).json({ message: "vous n'êtes pas authentifié" });
+      }
+    } catch (error) {
+      console.error('Erreur Axios (createAddress):', error.message);
+      res.status(500).json({ message: "Erreur interne du serveur" });
+    }
+};
+
+exports.updateAddress = async (req, res) => {
+    try {
+      const token = req.headers.authorization || '';
+      const auth = await authenticated(token);
+  
+      if (auth.response) {
+        const addressId = req.params.id;
+  
+        const response = await axios.put(`${SERVICE_URL_account}/address/update/${addressId}`, req.body, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+  
+        res.status(response.status).json(response.data);
+      } else {
+        res.status(400).json({ message: "vous n'êtes pas authentifié" });
+      }
+    } catch (error) {
+      console.error('Erreur Axios (updateAddress):', error.message);
+      res.status(500).send('Erreur interne du serveur');
+    }
+};
+  
+  

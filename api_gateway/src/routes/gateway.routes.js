@@ -5,4 +5,11 @@ module.exports = function(app) {
     app.post("/login", authController.login);
     app.post("/addRestaurant", authController.addRestaurant)
     app.post("/authenticate", authController.authenticate);
+    app.post("/profile", authController.getProfile);
+    app.put("/profile/update", authController.updateProfile);
+    app.delete("/account/delete", authController.deleteAccount);
+
+    // Address routes
+    app.post("/address/create", authController.createAddress);
+    app.put("/address/update/:id", authController.updateAddress);
 };
