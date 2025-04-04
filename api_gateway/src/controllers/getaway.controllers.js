@@ -6,11 +6,11 @@ const SERVICE_URL_restaurant = "http://restaurant-service:3003";
 const SERVICE_URL_order = "http://order-service:3004";
 
 async function authenticated(token) {
-    console.log("token", token)
+    // console.log("token", token)
     try {
         if (token) {
 
-            console.log("token authenticate", token)
+            // console.log("token authenticate", token)
 
             // Configuration des headers
             const config = {
@@ -22,7 +22,7 @@ async function authenticated(token) {
 
             const response = await axios.post(`${SERVICE_URL_account}/authenticate`, {}, config);
 
-            // console.log("rep auth", response)
+            // // console.log("rep auth", response)
             if (response.status == 200) {
                 return { response: true, info: response.data.data }
             } else {
@@ -33,7 +33,7 @@ async function authenticated(token) {
             return { response: false }
         }
     } catch (error) {
-        console.log("error auth", error)
+        // console.log("error auth", error)
         return { response: false }
 
     }
@@ -50,7 +50,7 @@ exports.addRestaurant = async (req, res) => {
         if (auth.response) {
 
             req.body.data = auth.info
-            console.log(req.body)
+            // console.log(req.body)
 
             const response = await axios.post(`${SERVICE_URL_restaurant}/addRestaurant`, req.body);
 
@@ -59,7 +59,7 @@ exports.addRestaurant = async (req, res) => {
             res.status(400).json({ message: "vous n'etes pas authentifié" });
         }
     } catch (error) {
-        console.error('Erreur Axios:', error.message);
+        // console.error('Erreur Axios:', error.message);
         res.status(500).send('Erreur interne du serveur');
     }
 };
@@ -74,7 +74,7 @@ exports.addArticle = async (req, res) => {
         if (auth.response) {
 
             req.body.data = auth.info
-            console.log(req.body)
+            // console.log(req.body)
 
             const response = await axios.post(`${SERVICE_URL_restaurant}/addArticle`, req.body);
 
@@ -83,7 +83,7 @@ exports.addArticle = async (req, res) => {
             res.status(400).json({ message: "vous n'etes pas authentifié" });
         }
     } catch (error) {
-        console.error('Erreur Axios:', error.message);
+        // console.error('Erreur Axios:', error.message);
         res.status(500).send('Erreur interne du serveur');
     }
 };
@@ -92,15 +92,15 @@ exports.addArticle = async (req, res) => {
 exports.login = async (req, res) => {
     try {
 
-        console.log("req.body", req.body)
+        // console.log("req.body", req.body)
         // Redirection de la requête POST vers le serveur d'authentification (localhost:3000)
         const response = await axios.post(`${SERVICE_URL_account}/login`, req.body);
 
-        console.log("rep", response)
+        // console.log("rep", response)
         // Retourner la réponse du serveur d'authentification au client
         res.status(response.status).json(response.data);
     } catch (error) {
-        console.error('Erreur Axios:', error.message);
+        // console.error('Erreur Axios:', error.message);
         res.status(500).send('Erreur interne du serveur');
     }
 };
@@ -109,16 +109,16 @@ exports.register = async (req, res) => {
     let response;
 
     try {
-        console.log("req.body", req.body);
+        // console.log("req.body", req.body);
         const response = await axios.post(`${SERVICE_URL_account}/register`, req.body);
-        console.log(response);
+        // console.log(response);
         res.status(response.status).json(response.data);
     } catch (error) {
         if (error.response && error.response.status === 400) {
             res.status(400).json({message: error.response.data.message});
         } else {
             // Si c'est une autre erreur, on envoie une réponse générique
-            console.error('Erreur Axios:', error.message);
+            // console.error('Erreur Axios:', error.message);
             res.status(500).send('Erreur interne du serveur');
         }
     }
@@ -130,7 +130,7 @@ exports.authenticate = async (req, res) => {
     try {
         const token = req.headers.authorization || '';
 
-        console.log("token authenticate", token)
+        // console.log("token authenticate", token)
 
         // Configuration des headers
         const config = {
@@ -142,14 +142,14 @@ exports.authenticate = async (req, res) => {
 
         // Envoi de la requête avec les headers
         const response = await axios.post(`${SERVICE_URL_account}/authenticate`, req.body, config);
-        console.log("response auth", response);
+        // console.log("response auth", response);
         res.status(response.status).json(response.data);
     } catch (error) {
         if (error.response && error.response.status === 400) {
             res.status(400).json({ message: error.response.data.message });
         } else {
             // Si c'est une autre erreur, on envoie une réponse générique
-            console.error('Erreur Axios:', error.message);
+            // console.error('Erreur Axios:', error.message);
             res.status(500).send('Erreur interne du serveur');
         }
     }
@@ -157,6 +157,7 @@ exports.authenticate = async (req, res) => {
 };
 
 exports.testOrder = async (req, res) => {
+    console.log("test order")
     try {
 
         const token = req.headers.authorization || '';
@@ -166,7 +167,7 @@ exports.testOrder = async (req, res) => {
         if (auth.response) {
 
             req.body.data = auth.info
-            console.log(req.body)
+            // console.log(req.body)
 
             const response = await axios.post(`${SERVICE_URL_order}/test`, req.body);
 
@@ -175,7 +176,7 @@ exports.testOrder = async (req, res) => {
             res.status(400).json({ message: "vous n'etes pas authentifié" });
         }
     } catch (error) {
-        console.error('Erreur Axios:', error.message);
+        // console.error('Erreur Axios:', error.message);
         res.status(500).send('Erreur interne du serveur');
     }
 };
@@ -191,7 +192,7 @@ exports.getProfile = async (req, res) => {
         if (auth.response) {
 
             req.body.data = auth.info
-            console.log(req.body)
+            // console.log(req.body)
 
             const response = await axios.post(`${SERVICE_URL_account}/profile`, req.body);
 
@@ -200,7 +201,7 @@ exports.getProfile = async (req, res) => {
             res.status(400).json({ message: "vous n'etes pas authentifié" });
         }
     } catch (error) {
-        console.error('Erreur Axios:', error.message);
+        // console.error('Erreur Axios:', error.message);
         res.status(500).send('Erreur interne du serveur');
     }
 };
@@ -222,7 +223,7 @@ exports.updateProfile = async (req, res) => {
         res.status(400).json({ message: "vous n'êtes pas authentifié" });
       }
     } catch (error) {
-      console.error("Erreur Axios (updateProfile):", error.message);
+      // console.error("Erreur Axios (updateProfile):", error.message);
       res.status(500).json({ message: "Erreur interne du serveur" });
     }
 };
@@ -242,7 +243,7 @@ exports.deleteAccount = async (req, res) => {
 
       return res.status(200).json(response.data);
     } catch (error) {
-      console.error("Erreur suppression via gateway :", error);
+      // console.error("Erreur suppression via gateway :", error);
       return res.status(500).json({ message: "Erreur serveur" });
     }
   };
@@ -271,7 +272,7 @@ exports.createAddress = async (req, res) => {
         res.status(400).json({ message: "vous n'êtes pas authentifié" });
       }
     } catch (error) {
-      console.error('Erreur Axios (createAddress):', error.message);
+      // console.error('Erreur Axios (createAddress):', error.message);
       res.status(500).json({ message: "Erreur interne du serveur" });
     }
 };
@@ -295,7 +296,7 @@ exports.updateAddress = async (req, res) => {
         res.status(400).json({ message: "vous n'êtes pas authentifié" });
       }
     } catch (error) {
-      console.error('Erreur Axios (updateAddress):', error.message);
+      // console.error('Erreur Axios (updateAddress):', error.message);
       res.status(500).send('Erreur interne du serveur');
     }
 };
