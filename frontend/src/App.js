@@ -16,6 +16,8 @@ import Checkout from './pages/client/Checkout';
 import RestaurantCreation from './pages/Restaurateur/RestaurantCreation';
 //import OrderConfirmation from './pages/Client/OrderConfirmation';
 import Carte from './pages/Restaurateur/Carte';
+import CreateArticle from './pages/Restaurateur/create-article';
+import RestaurantSettings from './pages/Restaurateur/RestaurantSettings';
 import Profile from './pages/client/Profile';
 
 
@@ -36,10 +38,9 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/carte" element={<Carte/>} />
         <Route path="/profile" element={<Profile />} />
-        <Route
-          path="/restaurant/:id"
-          element={<RestaurantDetails key={window.location.pathname} />}
-        />
+        <Route path="/create-article" element={<CreateArticle />}/>
+        <Route path="/restaurant-settings" element={<RestaurantSettings/>} />
+        <Route path="/restaurant/:id" element={<RestaurantDetails key={window.location.pathname} />}/>
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

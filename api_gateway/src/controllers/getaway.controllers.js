@@ -63,6 +63,30 @@ exports.addRestaurant = async (req, res) => {
     }
 };
 
+exports.addArticle = async (req, res) => {
+    try {
+
+        const token = req.headers.authorization || '';
+
+        auth = await authenticated(token)
+
+        if (auth.response) {
+
+            req.body.data = auth.info
+            console.log(req.body)
+
+            const response = await axios.post(`${SERVICE_URL_restaurant}/addArticle`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "vous n'etes pas authentifié" });
+        }
+    } catch (error) {
+        console.error('Erreur Axios:', error.message);
+        res.status(500).send('Erreur interne du serveur');
+    }
+};
+
 
 exports.login = async (req, res) => {
     try {
