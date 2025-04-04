@@ -6,9 +6,11 @@ module.exports = function(app) {
     app.post("/addRestaurant", authController.addRestaurant)
     app.post("/addArticle", authController.addArticle)
     app.post("/authenticate", authController.authenticate);
+    app.post("/testOrder", authController.testOrder)
     app.post("/profile", authController.getProfile);
     app.put("/profile/update", authController.updateProfile);
     app.delete("/account/delete", authController.deleteAccount);
+    app.post("/getRestaurantInfos", authController.getRestaurantInfos);
 
     // Address routes
     app.post("/address/create", authController.createAddress);
