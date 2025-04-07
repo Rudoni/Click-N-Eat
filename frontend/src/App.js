@@ -14,7 +14,7 @@ import RestaurantDetails from './pages/Restaurateur/RestaurantDetails';
 import Cart from './pages/client/Cart';
 import Checkout from './pages/client/Checkout';
 import RestaurantCreation from './pages/Restaurateur/RestaurantCreation';
-//import OrderConfirmation from './pages/Client/OrderConfirmation';
+//import OrderConfirmation from './pages/client/OrderConfirmation';
 import Carte from './pages/Restaurateur/Carte';
 import CreateArticle from './pages/Restaurateur/create-article';
 import RestaurantSettings from './pages/Restaurateur/RestaurantSettings';
