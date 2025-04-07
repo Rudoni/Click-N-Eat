@@ -50,7 +50,7 @@ const Header = () => {
           <Link to="/login" className="btn yellow" onClick={() => setOpen(false)}>Connexion</Link>
         ) : (
           <>
-            {/* Partie Client */
+            {/* Partie client */
             console.log("user", user)}
             {user.user_type == 1 && (
               <>
