@@ -289,3 +289,68 @@ exports.getMenu = async (req, res) => {
   }
 };
 
+exports.getListeArticleMenuRestaurant = async (req, res) => {
+  const { user_id } = req.body;
+
+  if (!user_id) {
+      return res.status(400).json({ message: "user_id requis" });
+  }
+
+  try {
+      // 1. Chercher restaurant_id depuis user_id
+      const restauQuery = {
+          name: 'get-restaurant-id-by-user',
+          text: 'SELECT restaurant_id FROM restaurant WHERE user_id = $1',
+          values: [user_id],
+      };
+
+      const restauResult = await client.query(restauQuery);
+
+      if (restauResult.rows.length === 0) {
+          return res.status(404).json({ message: "Aucun restaurant associé à cet utilisateur" });
+      }
+
+      const restaurant_id = restauResult.rows[0].restaurant_id;
+
+      // 2. Requête pour les articles
+      const articlesQuery = {
+          name: 'get-articles-by-restaurant',
+          text: `
+              SELECT article_id AS id, article_name AS nom, article_image AS image, can_be_sold_individually as venduSolo
+              FROM article
+              WHERE restaurant_id = $1
+          `,
+          values: [restaurant_id],
+      };
+
+      // 3. Requête pour les menus
+      const menusQuery = {
+          name: 'get-menus-by-restaurant',
+          text: `
+              SELECT menu_id AS id, menu_name AS nom, menu_image AS image
+              FROM menu
+              WHERE restaurant_id = $1
+          `,
+          values: [restaurant_id],
+      };
+
+      const [articlesResult, menusResult] = await Promise.all([
+          client.query(articlesQuery),
+          client.query(menusQuery),
+      ]);
+
+      const articles = articlesResult.rows;
+      const menus = menusResult.rows;
+
+      return res.status(200).json({
+          data: {
+              articles,
+              menus
+          }
+      });
+
+  } catch (e) {
+      console.error("Erreur lors de la récupération des articles et menus:", e);
+      return res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+};

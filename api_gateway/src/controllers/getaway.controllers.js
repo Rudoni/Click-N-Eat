@@ -422,3 +422,23 @@ exports.getMenu = async (req, res) => {
         res.status(500).send('Erreur interne du serveur');
     }
 };
+
+exports.getListeArticleMenuRestaurant = async (req, res) => {
+    try {
+        const token = req.headers.authorization || '';
+        const auth = await authenticated(token);
+
+        if (auth.response) {
+            req.body.data = auth.info;
+
+            const response = await axios.post(`${SERVICE_URL_restaurant}/getListeArticleMenuRestaurant`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "Vous n'êtes pas authentifié" });
+        }
+    } catch (error) {
+        console.error('Erreur Axios (getListeArticleMenu):', error.message);
+        res.status(500).send('Erreur interne du serveur');
+    }
+};
