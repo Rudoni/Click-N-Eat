@@ -30,7 +30,7 @@ const Carte = () => {
         <button className="btn yellow" onClick={() => navigate(`/edit-menu/${menu.id}`)}>Éditer</button>
       </div>
     ))}
-    <div className="grid-item add-item" onClick={() => navigate('/add-menu')}>
+    <div className="grid-item add-item" onClick={() => navigate('/createMenu')}>
       <img src={plusIcon} alt="Ajouter" className="menu-image" />
       <h4>Ajouter un menu</h4>
     </div>

@@ -20,6 +20,7 @@ import CreateArticle from './pages/Restaurateur/create-article';
 import RestaurantSettings from './pages/Restaurateur/RestaurantSettings';
 import Profile from './pages/client/Profile';
 import EditArticle from './pages/Restaurateur/EditArticle';
+import CreateMenu from './pages/Restaurateur/CreateMenu';
 
 
 function App() {
@@ -42,9 +43,11 @@ function App() {
         <Route path="/create-article" element={<CreateArticle />}/>
         <Route path="/restaurant-settings" element={<RestaurantSettings/>} />
         <Route path="/restaurant/:id" element={<RestaurantDetails key={window.location.pathname} />}/>
-        <Route path="*" element={<NotFound />} />
         <Route path="/editArticle/:articleId" element={<EditArticle />} />
         <Route path="/editArticle" element={<EditArticle />} />
+        <Route path="/createMenu" element={<CreateMenu />} />
+        
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </Router>
