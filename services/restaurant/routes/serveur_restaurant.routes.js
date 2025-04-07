@@ -10,4 +10,5 @@ module.exports = function(app) {
     app.put("/restaurant/update", authController.updateRestaurant);
     app.post("/getArticle", authController.getArticle);
     app.post("/getMenu", authController.getMenu);
+    app.post("/getRestaurantInfos", authController.getRestaurantInfos);
 }

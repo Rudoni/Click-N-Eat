@@ -1,0 +1,104 @@
+.add-article-page {
+    background-color: #f9f9f9;
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .add-article-page h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .add-article-form {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    gap: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .image-upload {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  
+  .image-placeholder,
+  .image-preview {
+    width: 100%;
+    max-width: 300px;
+    height: 300px;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    object-fit: cover;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+  
+  .image-upload input[type="file"] {
+    font-size: 0.9rem;
+  }
+  
+  .form-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-fields input,
+  .form-fields select {
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: 2px solid black;
+    font-size: 1rem;
+    background-color: #f5f5f5;
+  }
+  
+  .form-fields label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+  }
+  
+  .form-fields .checkbox {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: normal;
+  }
+  
+  .btn.yellow {
+    background-color: #FFCC00;
+    border: none;
+    font-weight: bold;
+    padding: 0.9rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .btn.yellow:hover {
+    background-color: #e6b800;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: -0.5rem;
+  }  

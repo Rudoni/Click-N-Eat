@@ -40,7 +40,7 @@ CREATE TABLE adress (
 );
 
 
-insert into user_type (user_type_name) values ('Client');
+insert into user_type (user_type_name) values ('client');
 insert into user_type (user_type_name) values ('Restaurateur');
 insert into user_type (user_type_name) values ('Développeur tiers');
 insert into user_type (user_type_name) values ('Livreur');

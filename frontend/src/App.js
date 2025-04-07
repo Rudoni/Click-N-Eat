@@ -14,11 +14,12 @@ import RestaurantDetails from './pages/Restaurateur/RestaurantDetails';
 import Cart from './pages/client/Cart';
 import Checkout from './pages/client/Checkout';
 import RestaurantCreation from './pages/Restaurateur/RestaurantCreation';
-//import OrderConfirmation from './pages/Client/OrderConfirmation';
+//import OrderConfirmation from './pages/client/OrderConfirmation';
 import Carte from './pages/Restaurateur/Carte';
 import CreateArticle from './pages/Restaurateur/create-article';
 import RestaurantSettings from './pages/Restaurateur/RestaurantSettings';
 import Profile from './pages/client/Profile';
+import EditArticle from './pages/Restaurateur/EditArticle';
 
 
 function App() {
@@ -42,6 +43,8 @@ function App() {
         <Route path="/restaurant-settings" element={<RestaurantSettings/>} />
         <Route path="/restaurant/:id" element={<RestaurantDetails key={window.location.pathname} />}/>
         <Route path="*" element={<NotFound />} />
+        <Route path="/editArticle/:articleId" element={<EditArticle />} />
+        <Route path="/editArticle" element={<EditArticle />} />
       </Routes>
       <Footer />
     </Router>

@@ -10,12 +10,41 @@ const RestaurantSettings = () => {
     postalCode: '',
     address: '',
   });
+
   const [mainImagePreview, setMainImagePreview] = useState(null);
   const [backgroundImagePreview, setBackgroundImagePreview] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    document.title = 'Paramètres du restaurant';
+    const token = localStorage.getItem("token");
+    const fetchUserInfos = async () => {
+      try {
+        const response = await fetch("http://localhost:3100/getRestaurantInfo", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({})
+        });
+
+        const json = await response.json();
+        if (response.ok) {
+          console.log(json)
+          setForm({
+            restaurantName: json.data.restaurant_name || '',
+            description: json.data.restaurant_description || '',
+            country: json.data.address_country || '',
+            city: json.data.address_city || '',
+            postalCode: json.data.address_postal_code || '',
+            address: json.data.address_name || '',
+          });
+        }
+      }catch(e){
+        
+      }
+    };
+    fetchUserInfos();
   }, []);
 
   const handleImageChange = (e, type) => {
@@ -34,7 +63,6 @@ const RestaurantSettings = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // FONCTION POUR ENVOYER LES MODIFS
     console.log('Modifications envoyées :', form);
   };
 

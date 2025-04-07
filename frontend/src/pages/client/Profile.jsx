@@ -223,7 +223,7 @@ export default function Profile() {
                 const data = await response.json();
                 if (response.ok) {
                   localStorage.removeItem("token");
-                  window.location.href = "/"; // ou page de confirmation
+                  window.location.href = "/"; 
                 } else {
                   alert(data.message || "Erreur lors de la suppression du compte.");
                 }
