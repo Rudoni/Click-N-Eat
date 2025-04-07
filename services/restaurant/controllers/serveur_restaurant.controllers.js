@@ -100,10 +100,70 @@ exports.deleteRestaurant = async (req, res) => {
     }
   };
 
+  exports.updateRestaurant = async (req, res) => {
+    const {restaurantName, description, country, city, postalCode, address, mainImage, backgroundImage, data} = req.body;
+    
+    const userId = data.user_id;
+
+    try {
+      // recuperation du restaurant_id
+      const queryGetRestaurantId = {
+        text: "SELECT restaurant_id FROM restaurant WHERE user_id = $1",
+        values: [userId],
+      };
+
+      const result = await client.query(queryGetRestaurantId);
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: "Aucun restaurant trouvé pour cet utilisateur." });
+      }
+
+      const restauID = result.rows[0].restaurant_id;
+
+      let query = {
+        text: 'UPDATE restaurant SET restaurant_name = $1, user_id = $2, restaurant_description = $3, image_main_binary = $4, image_back_binary = $5, address_country = $6, address_city = $7, address_postal_code = $8, address_name = $9 WHERE restaurant_id = $10',
+        values: [restaurantName, userId, description, mainImage, backgroundImage, country, city, postalCode, address, restauID],
+      };
+
+      const result1 = await client.query(query);
+
+      if (result1.rowCount === 0) {
+        return res.status(404).json({ message: "Restaurant non trouvé." });
+      }
+  
+      res.status(200).json({ message: "Restaurant mis à jour avec succès." });
+    } catch (e) {
+      console.error("Erreur updateRestaurant :", e);
+      res.status(500).json({ message: "Erreur interne du serveur."    });
+    }    
+    
+  };
+
+  exports.deleteArticle = async (req, res) => {
+    const { article_id } = req.body;
+  
+    if (!article_id) {
+      return res.status(400).json({ message: "ID article manquant." });
+    }
+  
+    try {
+      const query = {
+        text: 'DELETE FROM article WHERE article_id = $1',
+        values: [article_id],
+      };
+  
+      await client.query(query);
+      return res.status(200).json({ message: "Article supprimé avec succès." });
+    } catch (error) {
+      console.error("Erreur suppression Article :", error);
+      return res.status(500).json({ message: "Erreur interne lors de la suppression de l'Article." });
+    }
+  };
+
 exports.test_api = (req, res) =>{
 
   console.log(req.body)
-  res   .status(200).json({message: "OK"})
+  res.status(200).json({message: "OK"})
 }
 
 exports.getRestaurantInfos = async (req, res) => {
@@ -148,3 +208,84 @@ exports.getRestaurantInfos = async (req, res) => {
         return res.status(500).json({ message: "Erreur interne du serveur" });
     }
 };
+
+exports.getArticle = async (req, res) => {
+  const { article_id } = req.body;
+
+  if (!article_id) {
+      return res.status(400).json({ message: "article_id requis" });
+  }
+
+  const query = {
+      name: 'get-article-by-id',
+      text: 'SELECT * FROM article WHERE article_id = $1',
+      values: [article_id],
+  };
+
+  try {
+      const response = await client.query(query);
+
+      if (response.rows.length === 0) {
+          return res.status(404).json({ message: "Article non trouvé" });
+      }
+
+      const article = response.rows[0];
+
+      return res.status(200).json({ data: article });
+  } catch (e) {
+      console.error("Erreur lors de la récupération de l'article:", e);
+      return res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+};
+
+exports.getMenu = async (req, res) => {
+  const { menu_id } = req.body;
+
+  if (!menu_id) {
+      return res.status(400).json({ message: "menu_id requis" });
+  }
+
+  try {
+      // Récupérer les infos du menu
+      const menuQuery = {
+          name: 'get-menu-by-id',
+          text: 'SELECT * FROM menu WHERE menu_id = $1',
+          values: [menu_id],
+      };
+
+      const menuResult = await client.query(menuQuery);
+
+      if (menuResult.rows.length === 0) {
+          return res.status(404).json({ message: "Menu non trouvé" });
+      }
+
+      const menu = menuResult.rows[0];
+
+      // Récupérer les articles liés au menu
+      const articlesQuery = {
+          name: 'get-articles-from-menu',
+          text: `
+              SELECT a.*
+              FROM list_article_menu lam
+              JOIN article a ON lam.article_id = a.article_id
+              WHERE lam.menu_id = $1
+          `,
+          values: [menu_id],
+      };
+
+      const articlesResult = await client.query(articlesQuery);
+      const articles = articlesResult.rows;
+
+      return res.status(200).json({
+          data: {
+              menu,
+              articles
+          }
+      });
+
+  } catch (e) {
+      console.error("Erreur lors de la récupération du menu et des articles:", e);
+      return res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+};
+

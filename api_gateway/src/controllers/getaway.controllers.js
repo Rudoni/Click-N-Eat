@@ -64,6 +64,44 @@ exports.addRestaurant = async (req, res) => {
     }
 };
 
+exports.deleteRestaurant = async (req, res) => {
+    try {
+        const token = req.headers.authorization || '';
+        const auth = await authenticated(token);
+  
+        if (!auth.response) {
+          return res.status(403).json({ message: "Non autorisé." });
+        }
+  
+        const response = await axios.delete(`${SERVICE_URL_restaurant}/restaurant/delete`, {
+          data: { user_id: auth.info.user_id },
+        });
+  
+        return res.status(200).json(response.data);
+      } catch (error) {
+        return res.status(500).json({ message: "Erreur serveur" });
+      }
+};
+
+exports.deleteArticle = async (req, res) => {
+    try {
+        const token = req.headers.authorization || '';
+        const auth = await authenticated(token);
+  
+        if (!auth.response) {
+          return res.status(403).json({ message: "Non autorisé." });
+        }
+  
+        const response = await axios.delete(`${SERVICE_URL_restaurant}/article/delete`, {
+          data: { article_id: req.body.article_id },
+        });
+  
+        return res.status(200).json(response.data);
+      } catch (error) {
+        return res.status(500).json({ message: "Erreur serveur" });
+      }
+};
+
 exports.getRestaurantInfos = async (req, res) => {
 
     try {
@@ -320,5 +358,67 @@ exports.updateAddress = async (req, res) => {
     } catch (error) {
       // console.error('Erreur Axios (updateAddress):', error.message);
       res.status(500).send('Erreur interne du serveur');
+    }
+};
+
+exports.updateRestaurant = async (req, res) => {
+    try {
+      const token = req.headers.authorization || '';
+      const auth = await authenticated(token);
+
+      if (auth.response) {
+        req.body.user_id = auth.info.user_id;
+
+        const response = await axios.put(`${SERVICE_URL_restaurant}/restaurant/update`, req.body, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        res.status(response.status).json(response.data);
+      } else {
+        res.status(400).json({ message: "vous n'êtes pas authentifié" });
+      }
+    } catch (error) {
+      // console.error("Erreur Axios (updateProfile):", error.message);
+      res.status(500).json({ message: "Erreur interne du serveur" });
+    }
+};
+
+exports.getArticle = async (req, res) => {
+    try {
+        const token = req.headers.authorization || '';
+        const auth = await authenticated(token);
+
+        if (auth.response) {
+            req.body.data = auth.info;
+
+            const response = await axios.post(`${SERVICE_URL_restaurant}/getArticle`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "Vous n'êtes pas authentifié" });
+        }
+    } catch (error) {
+        console.error('Erreur Axios (getArticle):', error.message);
+        res.status(500).send('Erreur interne du serveur');
+    }
+};
+
+exports.getMenu = async (req, res) => {
+    try {
+        const token = req.headers.authorization || '';
+        const auth = await authenticated(token);
+
+        if (auth.response) {
+            req.body.data = auth.info;
+
+            const response = await axios.post(`${SERVICE_URL_restaurant}/getMenu`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "Vous n'êtes pas authentifié" });
+        }
+    } catch (error) {
+        console.error('Erreur Axios (getMenu):', error.message);
+        res.status(500).send('Erreur interne du serveur');
     }
 };
