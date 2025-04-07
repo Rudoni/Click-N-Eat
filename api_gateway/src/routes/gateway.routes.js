@@ -12,7 +12,7 @@ module.exports = function(app) {
     app.post("/profile", authController.getProfile);
     app.put("/profile/update", authController.updateProfile);
     app.delete("/account/delete", authController.deleteAccount);
-    app.post("/getRestaurantInfos", authController.getRestaurantInfos);
+    app.post("/getRestaurantInfo", authController.getRestaurantInfos);
     app.put("/restaurant/update", authController.updateRestaurant);
     app.post("/getArticle", authController.getArticle);
     app.post("/getMenu", authController.getMenu);
