@@ -25,4 +25,10 @@ module.exports = function(app) {
     // Address routes
     app.post("/address/create", authController.createAddress);
     app.put("/address/update/:id", authController.updateAddress);
+
+    // Referral routes
+    app.post("/referral-code", authController.createReferralCode);
+    app.post("/referral-code/get", authController.getReferralCode);
+    app.get('/referred-users', authController.getReferredUsers);
+
 };

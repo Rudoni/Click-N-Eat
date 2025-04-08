@@ -57,10 +57,35 @@ const EditArticle = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : value
     });
+  };
+
+  const handleDelete = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:3100/article/delete`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ article_id: articleId }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        navigate("/dashboard");
+      } else {
+        setError(data.message || "Erreur lors de la suppression.");
+      }
+    } catch (error) {
+      setError("Erreur lors de la connexion au serveur.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -151,6 +176,7 @@ const EditArticle = () => {
 
           {error && <p className="error-message">{error}</p>}
 
+          <button type="button" className="btn red" onClick={handleDelete}>Supprimer l'article</button>
           <button type="submit" className="btn yellow">Enregistrer les modifications</button>
         </div>
       </form>
