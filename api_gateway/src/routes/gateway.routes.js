@@ -11,6 +11,7 @@ module.exports = function(app) {
 
     app.post("/order", authController.order)
     app.post("/testOrderView", authController.testOrderView)
+    app.post("/supprimerCommande", authController.supprimerOrder)
 
 
     app.post("/profile", authController.getProfile);

@@ -28,7 +28,7 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem("token", data.authorization);
         console.log(JSON.stringify(data.authorization));
-        navigate("/dashboard");
+        navigate("/");
         window.location.reload();
       } else {
         console.error("Erreur de connexion :", data.message);

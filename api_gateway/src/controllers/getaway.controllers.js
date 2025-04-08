@@ -296,6 +296,30 @@ exports.testOrderView = async (req, res) => {
     }
 };
 
+exports.supprimerOrder = async (req, res) => {
+    console.log("test order")
+    try {
+
+        const token = req.headers.authorization || '';
+
+        auth = await authenticated(token)
+
+        if (auth.response) {
+
+            req.body.data = auth.info
+            // console.log(req.body)
+
+            const response = await axios.post(`${SERVICE_URL_order}/supprimer`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "vous n'etes pas authentifié" });
+        }
+    } catch (error) {
+        // console.error('Erreur Axios:', error.message);
+        res.status(500).send('Erreur interne du serveur');
+    }
+};
 
 exports.getProfile = async (req, res) => {
     try {
