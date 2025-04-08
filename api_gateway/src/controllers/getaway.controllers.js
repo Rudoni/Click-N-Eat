@@ -174,31 +174,16 @@ exports.register = async (req, res) => {
   try {
     const { referralCode, ...userData } = req.body;
 
-<<<<<<< Updated upstream
-    try {
-        console.log("req.body", req.body);
-        const response = await axios.post(`${SERVICE_URL_account}/register`, req.body);
-        console.log(response);
-        res.status(response.status).json(response.data);
-    } catch (error) {
-        if (error.response && error.response.status === 400) {
-            res.status(400).json({message: error.response.data.message});
-        } else {
-            // Si c'est une autre erreur, on envoie une réponse générique
-            console.error('Erreur Axios:', error.message);
-            res.status(500).send('Erreur interne du serveur');
-        }
-=======
     // 1. Création du compte via le microservice account
     const response = await axios.post(`${SERVICE_URL_account}/register`, userData);
     const createdUser = response.data;
 
-    console.log("✅ CREATED USER:", createdUser);
+    console.log("CREATED USER:", createdUser);
 
     // 2. Si un code de parrainage est fourni, tenter de l’enregistrer
     if (referralCode && createdUser.user_id) {
       try {
-        console.log("📤 Envoi useReferralCode:", {
+        console.log("Envoi useReferralCode:", {
           user_id: createdUser.user_id,
           code: referralCode
         });
@@ -208,13 +193,26 @@ exports.register = async (req, res) => {
           code: referralCode
         });
 
-        console.log("🎉 Code de parrainage utilisé avec succès !");
+        console.log("Code de parrainage utilisé avec succès !");
       } catch (referralError) {
-        console.error("⚠️ Erreur lors de l’utilisation du code de parrainage :", referralError.response?.data || referralError.message);
-        // Tu pourrais ici logguer dans une base si tu veux suivre les erreurs
+        console.error("Erreur lors de l’utilisation du code de parrainage :", referralError.response?.data || referralError.message);
+        // On log seulement, mais on n'empêche pas l'inscription
       }
->>>>>>> Stashed changes
     }
+
+    // 3. Réponse finale
+    res.status(response.status).json(createdUser);
+
+  } catch (error) {
+    if (error.response && error.response.status === 400) {
+      res.status(400).json({ message: error.response.data.message });
+    } else {
+      console.error("Erreur Axios (register):", error.message);
+      res.status(500).send("Erreur interne du serveur");
+    }
+  }
+};
+
 
     // 3. Réponse au client
     res.status(response.status).json(createdUser);
@@ -408,7 +406,6 @@ exports.updateAddress = async (req, res) => {
     }
 };
 
-<<<<<<< Updated upstream
 exports.updateRestaurant = async (req, res) => {
     try {
       const token = req.headers.authorization || '';
@@ -490,7 +487,6 @@ exports.getListeArticleMenuRestaurant = async (req, res) => {
         res.status(500).send('Erreur interne du serveur');
     }
 };
-=======
 
 
 // referral
@@ -551,6 +547,3 @@ exports.getReferredUsers = async (req, res) => {
   }
 };
 
-  
-  
->>>>>>> Stashed changes
