@@ -3,21 +3,39 @@ const client = require('../db'); // Importer la connexion MongoDB
 const db = client.db('restaurant'); // Choisir la base de données
 const collection = db.collection('orders'); // Sélectionner une collection
 
-exports.createOrder= async (req, res) => {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    orderData = {a:"a", b:"bbbbbbbbbbbbb"}
+exports.createOrder = async (req, res) => {
+    const {data, items} = req.body;
+
+    console.log(data)
+    const clinetOrder = {clinet: data, items: items}
+
     try {
-        // Insérer un document et obtenir le résultat
-        const result = await collection.insertOne(orderData);
+        const result = await collection.insertOne(clinetOrder);
 
         if (result.acknowledged) {
-            console.log('✅ Commande ajoutée avec succès');
-            console.log('ID de la commande insérée:', result.insertedId);
+            res.status(200).json({message: 'ID de la commande insérée:'+ result.insertedId});
         } else {
-            console.log('❌ L\'insertion a échoué');
+            console.log('L\'insertion a échoué');
+            res.status(400).json({message: "erreur insertion"});
         }
     } catch (err) {
-        console.error('❌ Erreur lors de l\'ajout de la commande :', err);
+        res.status(400).json({message: "erreur insertion"});
     }
-    res.status(200).json({message: "aaaaaaaaaa"});
+}
+
+exports.viewOrder = async (req,res) =>{
+    const {data} = req.body;
+    switch (data.user_type){
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+    }
+    result = await collection.find({}).toArray();
+    console.log(result)
+    res.status(200).json(result)
 }
