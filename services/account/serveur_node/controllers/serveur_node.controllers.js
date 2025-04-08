@@ -33,8 +33,11 @@ exports.register = async (req, res) => {
 
     if (response.rowCount === 1) {
       const user_id = response.rows[0].user_id;
+      const accessToken = jwt.sign({ user_id: user_id, user_type:type, exp: Math.floor(Date.now() / 1000) + 3600 }, "CESI2025@Fisa");
+
       return res.status(200).json({
         message: "Connexion réussie !",
+          authorization: accessToken,
         user_id
       });
     } else {
@@ -71,7 +74,7 @@ exports.login = async (req, res) => {
         let user_id = response.rows[0].user_id;
         let type = response.rows[0].user_type_id;
 
-        const accessToken = jwt.sign({ user_id: user_id, user_type:type, exp: Math.floor(Date.now() / 1000) + 1200 }, "CESI2025@Fisa");
+        const accessToken = jwt.sign({ user_id: user_id, user_type:type, exp: Math.floor(Date.now() / 1000) + 3600 }, "CESI2025@Fisa");
 
         console.log(response)
 

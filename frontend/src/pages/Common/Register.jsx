@@ -46,10 +46,12 @@ const Register = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("Inscription réussie avec rôle :", role);
+        localStorage.setItem("token", data.authorization);
+        window.location.reload();
         if (role === "2") {
           navigate("/create-restaurant");
         } else {
-          navigate("/dashboard");
+          navigate("/");
         }
       } else {
         console.error("Erreur :", data.message);
