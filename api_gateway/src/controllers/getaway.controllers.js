@@ -3,7 +3,12 @@ const { response } = require("express");
 
 const SERVICE_URL_account = "http://account-service:3001";
 const SERVICE_URL_restaurant = "http://restaurant-service:3003";
+<<<<<<< Updated upstream
 const SERVICE_URL_order = "http://order-service:3004";
+=======
+const SERVICE_URL_referral = 'http://referral-service:3200';
+
+>>>>>>> Stashed changes
 
 async function authenticated(token) {
     console.log("token", token)
@@ -166,8 +171,10 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-    let response;
+  try {
+    const { referralCode, ...userData } = req.body;
 
+<<<<<<< Updated upstream
     try {
         console.log("req.body", req.body);
         const response = await axios.post(`${SERVICE_URL_account}/register`, req.body);
@@ -181,8 +188,48 @@ exports.register = async (req, res) => {
             console.error('Erreur Axios:', error.message);
             res.status(500).send('Erreur interne du serveur');
         }
+=======
+    // 1. Création du compte via le microservice account
+    const response = await axios.post(`${SERVICE_URL_account}/register`, userData);
+    const createdUser = response.data;
+
+    console.log("✅ CREATED USER:", createdUser);
+
+    // 2. Si un code de parrainage est fourni, tenter de l’enregistrer
+    if (referralCode && createdUser.user_id) {
+      try {
+        console.log("📤 Envoi useReferralCode:", {
+          user_id: createdUser.user_id,
+          code: referralCode
+        });
+
+        await axios.post(`${SERVICE_URL_referral}/use-referral-code`, {
+          user_id: createdUser.user_id,
+          code: referralCode
+        });
+
+        console.log("🎉 Code de parrainage utilisé avec succès !");
+      } catch (referralError) {
+        console.error("⚠️ Erreur lors de l’utilisation du code de parrainage :", referralError.response?.data || referralError.message);
+        // Tu pourrais ici logguer dans une base si tu veux suivre les erreurs
+      }
+>>>>>>> Stashed changes
     }
+
+    // 3. Réponse au client
+    res.status(response.status).json(createdUser);
+
+  } catch (error) {
+    if (error.response && error.response.status === 400) {
+      console.warn("⚠️ Erreur 400 création compte :", error.response.data.message);
+      res.status(400).json({ message: error.response.data.message });
+    } else {
+      console.error("❌ Erreur Axios (register):", error.message);
+      res.status(500).send("Erreur interne du serveur");
+    }
+  }
 };
+
 
 
 exports.authenticate = async (req, res) => {
@@ -361,6 +408,7 @@ exports.updateAddress = async (req, res) => {
     }
 };
 
+<<<<<<< Updated upstream
 exports.updateRestaurant = async (req, res) => {
     try {
       const token = req.headers.authorization || '';
@@ -442,3 +490,67 @@ exports.getListeArticleMenuRestaurant = async (req, res) => {
         res.status(500).send('Erreur interne du serveur');
     }
 };
+=======
+
+
+// referral
+exports.getReferralCode = async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    const auth = await authenticated(token);
+
+    if (!auth.response) {
+      return res.status(401).json({ message: 'Non authentifié' });
+    }
+
+    const response = await axios.post(`${SERVICE_URL_referral}/referral-code`, {
+      user_id: auth.info.user_id
+    });
+
+    res.status(response.status).json(response.data);
+  } catch (err) {
+    console.error('Erreur getReferralCode (gateway) :', err.message);
+    res.status(500).json({ message: 'Erreur serveur (gateway)' });
+  }
+};
+
+
+
+exports.createReferralCode = async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    const auth = await authenticated(token);
+
+    if (!auth.response) return res.status(401).json({ message: 'Non authentifié' });
+
+    const response = await axios.post(`${SERVICE_URL_referral}/referral-code`, {
+      user_id: auth.info.user_id
+    });
+
+    res.status(response.status).json(response.data);
+  } catch (err) {
+    console.error('Erreur createReferralCode (gateway) :', err.message);
+    res.status(500).json({ message: 'Erreur serveur (gateway)' });
+  }
+};
+
+exports.getReferredUsers = async (req, res) => {
+  const token = req.headers.authorization || '';
+  const auth = await authenticated(token);
+
+  if (!auth.response) {
+    return res.status(401).json({ message: "Non authentifié" });
+  }
+
+  try {
+    const response = await axios.get(`${SERVICE_URL_referral}/referrals/${auth.info.user_id}`);
+    res.status(response.status).json(response.data);
+  } catch (err) {
+    console.error("Erreur getReferredUsers (gateway) :", err.message);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+  
+  
+>>>>>>> Stashed changes

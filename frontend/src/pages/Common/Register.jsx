@@ -9,7 +9,8 @@ const Register = () => {
     prenom: "",
     email: "",
     password: "",
-    password2: ""
+    password2: "",
+    referralCode: ""  
   });
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Empêche le rechargement de la page
+    e.preventDefault();
 
     try {
       const response = await fetch("http://localhost:3100/register", {
@@ -38,27 +39,25 @@ const Register = () => {
           type: role,
           nom: form.nom,
           prenom: form.prenom,
+          referralCode: form.referralCode || undefined  
         }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        console.log(role)
-        if (role == 2) {
+        console.log("Inscription réussie avec rôle :", role);
+        if (role === "2") {
           navigate("/create-restaurant");
         } else {
           navigate("/dashboard");
         }
       } else {
-        console.error("Erreur de connexion :", data.message);
+        console.error("Erreur :", data.message);
         alert(data.message);
-
       }
-
     } catch (error) {
-      console.error("Erreur de connexion :", error);
-      alert(" ligne 60 dans le code Erreur de connexion, adresse mail ou mot de passe erroné");
-
+      console.error("Erreur réseau :", error);
+      alert("Erreur lors de l'inscription.");
     }
   };
 
@@ -86,7 +85,7 @@ const Register = () => {
       </div>
 
       <form className="register-form" onSubmit={handleSubmit}>
-        <h2>{roleNames[role] || "Sélectionnez un rôle"}</h2>  {/* Affichage dynamique */}
+        <h2>{roleNames[role] || "Sélectionnez un rôle"}</h2>
 
         <label>Nom</label>
         <input id="nom" name="nom" onChange={handleChange} required />
@@ -104,12 +103,16 @@ const Register = () => {
         <label>Confirmation mot de passe</label>
         <input id="password2" name="password2" type="password" onChange={handleChange} required />
 
+        {/* Champ code de parrainage */}
+        <label>Code de parrainage (facultatif)</label>
+        <input id="referralCode" name="referralCode" value={form.referralCode} onChange={handleChange} placeholder="ABCD1234" />
+
         <button type="submit" className="btn yellow">
           Créer un compte
         </button>
       </form>
     </div>
-  );  
+  );
 };
 
 export default Register;

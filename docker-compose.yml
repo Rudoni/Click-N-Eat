@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   postgres:
     image: postgres:15
@@ -7,9 +5,9 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: rootpassword
-      POSTGRES_DB: accountdb
+      POSTGRES_DB: account
     ports:
-      - "5433:5432"  # Externe:Interne
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -60,6 +58,23 @@ services:
       - ./services/account/serveur_node:/app
       - /app/node_modules
 
+  referral-service:
+    build:
+      context: ./services/referral
+    container_name: referral_service
+    ports:
+      - "3200:3200"
+    depends_on:
+      - postgres
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://root:rootpassword@postgres:5432/account
+    networks:
+      - mynetwork
+    volumes:
+      - ./services/referral:/app
+      - /app/node_modules
+
   order-service:
     build:
       context: ./services/order
@@ -84,6 +99,7 @@ services:
       - "3100:3100"
     depends_on:
       - account-service
+      - referral-service
     networks:
       - mynetwork
     volumes:

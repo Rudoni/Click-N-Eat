@@ -14,13 +14,14 @@ import RestaurantDetails from './pages/Restaurateur/RestaurantDetails';
 import Cart from './pages/client/Cart';
 import Checkout from './pages/client/Checkout';
 import RestaurantCreation from './pages/Restaurateur/RestaurantCreation';
-//import OrderConfirmation from './pages/client/OrderConfirmation';
+import OrderConfirmation from './pages/client/OrderConfirmation';
 import Carte from './pages/Restaurateur/Carte';
 import CreateArticle from './pages/Restaurateur/create-article';
 import RestaurantSettings from './pages/Restaurateur/RestaurantSettings';
 import Profile from './pages/client/Profile';
 import EditArticle from './pages/Restaurateur/EditArticle';
 import CreateMenu from './pages/Restaurateur/CreateMenu';
+import Parrainage from './pages/Common/Parrainage';
 
 
 function App() {
@@ -42,11 +43,12 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/create-article" element={<CreateArticle />}/>
         <Route path="/restaurant-settings" element={<RestaurantSettings/>} />
+        <Route path="/confirmation" element={<OrderConfirmation/>} />
+        <Route path="/parrainage" element={<Parrainage />} />
         <Route path="/restaurant/:id" element={<RestaurantDetails key={window.location.pathname} />}/>
         <Route path="/editArticle/:articleId" element={<EditArticle />} />
         <Route path="/editArticle" element={<EditArticle />} />
         <Route path="/createMenu" element={<CreateMenu />} />
-        
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

@@ -48,7 +48,7 @@ const Checkout = () => {
             country: addr.country,
           };
           setAddress(formatted);
-          setForm(formatted); // remplir les champs du formulaire si edit
+          setForm(formatted); 
         } else {
           console.warn("Aucune adresse trouvée.");
         }
