@@ -290,7 +290,8 @@ exports.getMenu = async (req, res) => {
 };
 
 exports.getListeArticleMenuRestaurant = async (req, res) => {
-  const { user_id } = req.body;
+  const { data } = req.body;
+  const user_id = data.user_id
 
   if (!user_id) {
       return res.status(400).json({ message: "user_id requis" });
