@@ -3,12 +3,8 @@ const { response } = require("express");
 
 const SERVICE_URL_account = "http://account-service:3001";
 const SERVICE_URL_restaurant = "http://restaurant-service:3003";
-<<<<<<< Updated upstream
 const SERVICE_URL_order = "http://order-service:3004";
-=======
 const SERVICE_URL_referral = 'http://referral-service:3200';
-
->>>>>>> Stashed changes
 
 async function authenticated(token) {
     console.log("token", token)
