@@ -13,59 +13,50 @@ const EditArticle = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { articleId } = useParams(); // récup l'ID depuis l'URL
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     document.title = "Édition de l'article";
-    //fetchArticleData();
-  }, []);
-
-  //FONCTION A MODIF POUR RECUP LES INFOS BASE SUR L'ID
-  /*
-  const fetchArticleData = async () => {
-    try {
-      const response = await fetch(`http://localhost:3100/getArticle/${articleId}`);
-      const data = await response.json();
-      if (response.ok && data.article) {
-        setFormData({
-          name: data.article.name || '',
-          type: data.article.type || '',
-          price: data.article.price || '',
-          solo: data.article.solo || false,
+    
+    const fetchArticleData = async () => {
+      try {
+        const response = await fetch("http://localhost:3100/getArticle", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ article_id: articleId }), // Envoie l'ID dans le body
         });
 
-        if (data.article.image) {
-          const base64 = `data:image/jpeg;base64,${data.article.image}`;
-          setImagePreview(base64);
+        const data = await response.json();
+        if (response.ok && data.article) {
+          setFormData({
+            name: data.article.name || '',
+            type: data.article.type || '',
+            price: data.article.price || '',
+            solo: data.article.solo || false,
+          });
+
+          // Si une image est présente, afficher l'aperçu
+          if (data.article.image) {
+            const base64 = `data:image/jpeg;base64,${data.article.image}`;
+            setImagePreview(base64);
+          }
+        } else {
+          setError(data.message || "Erreur lors du chargement de l'article.");
         }
-
-      } else {
-        setError(data.message || "Erreur lors du chargement de l'article.");
+      } catch (error) {
+        setError("Erreur lors de la connexion au serveur.");
       }
-    } catch (err) {
-      setError("Erreur serveur.");
-      console.error(err);
-    }
-  };
-  */
+    };
+    fetchArticleData();
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
+  }, []);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value
-    });
-  };
+
 
   const handleDelete = async () => {
-    const token = localStorage.getItem("token");
 
     try {
       const response = await fetch(`http://localhost:3100/article/delete`, {

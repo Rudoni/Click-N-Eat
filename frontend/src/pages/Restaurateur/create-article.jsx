@@ -52,7 +52,7 @@ const CreateArticle = () => {
 
       const data = await response.json();
       if (response.ok) {
-        navigate("/dashboard");
+        navigate("/carte");
       } else {
         setError(data.message || "Une erreur est survenue.");
       }
