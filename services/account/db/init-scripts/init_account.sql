@@ -46,3 +46,17 @@ insert into user_type (user_type_name) values ('Développeur tiers');
 insert into user_type (user_type_name) values ('Livreur');
 insert into user_type (user_type_name) values ('Developpeur interne');
 insert into user_type (user_type_name) values ('Commercial');
+
+CREATE TABLE referral_codes (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER UNIQUE REFERENCES client(user_id) ON DELETE CASCADE,
+  code VARCHAR(10) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE referrals (
+  id SERIAL PRIMARY KEY,
+  referrer_id INTEGER REFERENCES client(user_id),
+  referred_id INTEGER REFERENCES client(user_id),
+  created_at TIMESTAMP DEFAULT NOW()
+);

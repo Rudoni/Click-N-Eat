@@ -45,7 +45,6 @@ const Header = () => {
       <div className="burger" onClick={() => setOpen(!open)}>☰</div>
 
       <nav className={`nav ${open ? "open" : ""}`}>
-        <Link to="/contact" className="link" onClick={() => setOpen(false)}>Contact</Link>
         {!user ? (
           <Link to="/login" className="btn yellow" onClick={() => setOpen(false)}>Connexion</Link>
         ) : (
@@ -84,7 +83,11 @@ const Header = () => {
 
             {/* Partie Livreur */}
             {user.user_type == 4 && (
-              <Link to="/livraisons" className="btn light" onClick={() => setOpen(false)}>Mes livraisons</Link>
+              <>
+                <Link to="/livraison" className="btn light" onClick={() => setOpen(false)}>Livraison</Link>
+                <Link to="/historique-livraisons" className="btn light" onClick={() => setOpen(false)}>Historique des livraisons</Link>
+                <Link to="/profile" className="btn light" onClick={() => setOpen(false)}>Profile</Link>
+              </>
             )}
           </>
         )}

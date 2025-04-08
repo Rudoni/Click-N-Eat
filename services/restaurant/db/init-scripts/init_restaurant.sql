@@ -31,6 +31,7 @@ CREATE TABLE article (
     restaurant_id INTEGER NOT NULL,
     article_type_id INTEGER NOT NULL,
     article_name VARCHAR(100) NOT NULL,
+    article_image BYTEA,
     price NUMERIC(10,2) NOT NULL,
     can_be_sold_individually BOOLEAN DEFAULT TRUE
 );
@@ -39,6 +40,7 @@ CREATE TABLE menu (
     menu_id SERIAL PRIMARY KEY,
     restaurant_id INTEGER NOT NULL,
     menu_name VARCHAR(100),
+    menu_image BYTEA,
     price NUMERIC(10,2)
 );
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CreateMenu.css';
 
 const CreateMenu = () => {
@@ -10,35 +10,37 @@ const CreateMenu = () => {
   });
 
   const [imagePreview, setImagePreview] = useState(null);
+  const [articles, setArticles] = useState([]);
+  const [error, setError] = useState("");
 
-  // Faux articles de test
-  const fakeArticles = [
-    {
-      _id: '1',
-      name: 'Pizza Margherita',
-      image: 'https://via.placeholder.com/100?text=Pizza',
-    },
-    {
-      _id: '2',
-      name: 'Coca-Cola',
-      image: 'https://via.placeholder.com/100?text=Coca',
-    },
-    {
-      _id: '3',
-      name: 'Tiramisu',
-      image: 'https://via.placeholder.com/100?text=Tiramisu',
-    },
-    {
-      _id: '4',
-      name: 'Frites',
-      image: 'https://via.placeholder.com/100?text=Frites',
-    },
-    {
-      _id: '5',
-      name: 'Salade César',
-      image: 'https://via.placeholder.com/100?text=Salade',
-    },
-  ];
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch("http://localhost:3100/getListeArticleMenuRestaurant", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({}), // corps vide
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setArticles(data.data.articles || []);
+        } else {
+          setError(data.message || "Erreur lors du chargement des articles.");
+        }
+      } catch (e) {
+        console.error(e);
+        setError("Erreur de connexion au serveur.");
+      }
+    };
+
+    fetchArticles();
+  }, [token]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -63,7 +65,7 @@ const CreateMenu = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Menu créé :", formData);
-    // Tu peux ensuite faire un fetch/axios ici pour envoyer les données
+    // À remplacer par un POST vers ton API pour créer un menu
   };
 
   return (
@@ -103,15 +105,18 @@ const CreateMenu = () => {
         )}
 
         <h3>Choisir les articles du menu</h3>
+
+        {error && <p className="error-message">{error}</p>}
+
         <div className="articles-grid">
-          {fakeArticles.map((article) => (
+          {articles.map((article) => (
             <div
-              key={article._id}
-              className={`article-card ${formData.selectedArticles.includes(article._id) ? 'selected' : ''}`}
-              onClick={() => toggleArticleSelection(article._id)}
+              key={article.id}
+              className={`article-card ${formData.selectedArticles.includes(article.id) ? 'selected' : ''}`}
+              onClick={() => toggleArticleSelection(article.id)}
             >
-              <img src={article.image} alt={article.name} />
-              <p>{article.name}</p>
+              <img src={`data:image/jpeg;base64,${article.image}`} alt={article.nom} />
+              <p>{article.nom}</p>
               <div className="select-bubble" />
             </div>
           ))}
