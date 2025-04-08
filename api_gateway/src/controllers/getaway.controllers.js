@@ -174,6 +174,8 @@ exports.register = async (req, res) => {
   try {
     const { referralCode, ...userData } = req.body;
 
+    console.log("Données reçues pour inscription :", req.body);
+
     // 1. Création du compte via le microservice account
     const response = await axios.post(`${SERVICE_URL_account}/register`, userData);
     const createdUser = response.data;
@@ -196,15 +198,16 @@ exports.register = async (req, res) => {
         console.log("Code de parrainage utilisé avec succès !");
       } catch (referralError) {
         console.error("Erreur lors de l’utilisation du code de parrainage :", referralError.response?.data || referralError.message);
-        // On log seulement, mais on n'empêche pas l'inscription
+        // On log seulement, mais on ne bloque pas l'inscription
       }
     }
 
-    // 3. Réponse finale
+    // 3. Réponse finale au client
     res.status(response.status).json(createdUser);
 
   } catch (error) {
     if (error.response && error.response.status === 400) {
+      console.warn("Erreur 400 création compte :", error.response.data.message);
       res.status(400).json({ message: error.response.data.message });
     } else {
       console.error("Erreur Axios (register):", error.message);
@@ -213,20 +216,6 @@ exports.register = async (req, res) => {
   }
 };
 
-
-    // 3. Réponse au client
-    res.status(response.status).json(createdUser);
-
-  } catch (error) {
-    if (error.response && error.response.status === 400) {
-      console.warn("⚠️ Erreur 400 création compte :", error.response.data.message);
-      res.status(400).json({ message: error.response.data.message });
-    } else {
-      console.error("❌ Erreur Axios (register):", error.message);
-      res.status(500).send("Erreur interne du serveur");
-    }
-  }
-};
 
 
 
