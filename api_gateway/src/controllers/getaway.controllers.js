@@ -4,6 +4,7 @@ const { response } = require("express");
 const SERVICE_URL_account = "http://account-service:3001";
 const SERVICE_URL_restaurant = "http://restaurant-service:3003";
 const SERVICE_URL_order = "http://order-service:3004";
+const SERVICE_URL_referral = 'http://referral-service:3200';
 
 async function authenticated(token) {
     console.log("token", token)
@@ -166,23 +167,52 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-    let response;
+  try {
+    const { referralCode, ...userData } = req.body;
 
-    try {
-        console.log("req.body", req.body);
-        const response = await axios.post(`${SERVICE_URL_account}/register`, req.body);
-        console.log(response);
-        res.status(response.status).json(response.data);
-    } catch (error) {
-        if (error.response && error.response.status === 400) {
-            res.status(400).json({message: error.response.data.message});
-        } else {
-            // Si c'est une autre erreur, on envoie une réponse générique
-            console.error('Erreur Axios:', error.message);
-            res.status(500).send('Erreur interne du serveur');
-        }
+    console.log("Données reçues pour inscription :", req.body);
+
+    // 1. Création du compte via le microservice account
+    const response = await axios.post(`${SERVICE_URL_account}/register`, userData);
+    const createdUser = response.data;
+
+    console.log("CREATED USER:", createdUser);
+
+    // 2. Si un code de parrainage est fourni, tenter de l’enregistrer
+    if (referralCode && createdUser.user_id) {
+      try {
+        console.log("Envoi useReferralCode:", {
+          user_id: createdUser.user_id,
+          code: referralCode
+        });
+
+        await axios.post(`${SERVICE_URL_referral}/use-referral-code`, {
+          user_id: createdUser.user_id,
+          code: referralCode
+        });
+
+        console.log("Code de parrainage utilisé avec succès !");
+      } catch (referralError) {
+        console.error("Erreur lors de l’utilisation du code de parrainage :", referralError.response?.data || referralError.message);
+        // On log seulement, mais on ne bloque pas l'inscription
+      }
     }
+
+    // 3. Réponse finale au client
+    res.status(response.status).json(createdUser);
+
+  } catch (error) {
+    if (error.response && error.response.status === 400) {
+      console.warn("Erreur 400 création compte :", error.response.data.message);
+      res.status(400).json({ message: error.response.data.message });
+    } else {
+      console.error("Erreur Axios (register):", error.message);
+      res.status(500).send("Erreur interne du serveur");
+    }
+  }
 };
+
+
 
 
 exports.authenticate = async (req, res) => {
@@ -216,7 +246,32 @@ exports.authenticate = async (req, res) => {
 
 };
 
-exports.testOrder = async (req, res) => {
+exports.order = async (req, res) => {
+    console.log("test order")
+    try {
+
+        const token = req.headers.authorization || '';
+
+        auth = await authenticated(token)
+
+        if (auth.response) {
+
+            req.body.data = auth.info
+            console.log(JSON.stringify(req.body))
+
+            const response = await axios.post(`${SERVICE_URL_order}/order`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "vous n'etes pas authentifié" });
+        }
+    } catch (error) {
+        // console.error('Erreur Axios:', error.message);
+        res.status(500).send('Erreur interne du serveur');
+    }
+};
+
+exports.testOrderView = async (req, res) => {
     console.log("test order")
     try {
 
@@ -229,7 +284,7 @@ exports.testOrder = async (req, res) => {
             req.body.data = auth.info
             // console.log(req.body)
 
-            const response = await axios.post(`${SERVICE_URL_order}/test`, req.body);
+            const response = await axios.post(`${SERVICE_URL_order}/testView`, req.body);
 
             res.status(response.status).json(response.data);
         } else {
@@ -442,3 +497,63 @@ exports.getListeArticleMenuRestaurant = async (req, res) => {
         res.status(500).send('Erreur interne du serveur');
     }
 };
+
+
+// referral
+exports.getReferralCode = async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    const auth = await authenticated(token);
+
+    if (!auth.response) {
+      return res.status(401).json({ message: 'Non authentifié' });
+    }
+
+    const response = await axios.post(`${SERVICE_URL_referral}/referral-code`, {
+      user_id: auth.info.user_id
+    });
+
+    res.status(response.status).json(response.data);
+  } catch (err) {
+    console.error('Erreur getReferralCode (gateway) :', err.message);
+    res.status(500).json({ message: 'Erreur serveur (gateway)' });
+  }
+};
+
+
+
+exports.createReferralCode = async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    const auth = await authenticated(token);
+
+    if (!auth.response) return res.status(401).json({ message: 'Non authentifié' });
+
+    const response = await axios.post(`${SERVICE_URL_referral}/referral-code`, {
+      user_id: auth.info.user_id
+    });
+
+    res.status(response.status).json(response.data);
+  } catch (err) {
+    console.error('Erreur createReferralCode (gateway) :', err.message);
+    res.status(500).json({ message: 'Erreur serveur (gateway)' });
+  }
+};
+
+exports.getReferredUsers = async (req, res) => {
+  const token = req.headers.authorization || '';
+  const auth = await authenticated(token);
+
+  if (!auth.response) {
+    return res.status(401).json({ message: "Non authentifié" });
+  }
+
+  try {
+    const response = await axios.get(`${SERVICE_URL_referral}/referrals/${auth.info.user_id}`);
+    res.status(response.status).json(response.data);
+  } catch (err) {
+    console.error("Erreur getReferredUsers (gateway) :", err.message);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+

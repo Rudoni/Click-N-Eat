@@ -2,49 +2,52 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const client = require("../db");
 
+
 exports.register = async (req, res) => {
-    const {email, password, password2, nom, prenom, type} = req.body;
+  const { email, password, password2, nom, prenom, type } = req.body;
 
-    if (password !== password2) {
-        return res.status(400).json({message: "Les mots de passe ne correspondent pas."});
-    }
+  // Vérification des mots de passe
+  if (password !== password2) {
+    return res.status(400).json({ message: "Les mots de passe ne correspondent pas." });
+  }
 
+  // Vérification de la complexité du mot de passe
+  if (!password.match(/(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}/)) {
+    return res.status(400).json({ message: "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial." });
+  }
 
-    if (!password.match(/(?=.*[A-Z]{1,})(?=.*[^a-zA-Z\s\d]{1,})(?=.*\d{1,})(?=.*[a-z]{1,}).{8,}/)) {
-        return res.status(400).json({message: "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial."})
-    }
-
+  try {
+    // Hash du mot de passe
     const hashed_password = await bcrypt.hash(password, 10);
 
+    // Requête d'insertion dans la base
     const query = {
-        // give the query a unique name
-        name: 'register-user',
-        text: 'insert into client (first_name, last_name, email, password_hash, user_type_id) values ($1, $2, $3, $4, $5)',
-        values: [prenom, nom, email, hashed_password, type],
+      name: 'register-user',
+      text: 'INSERT INTO client (first_name, last_name, email, password_hash, user_type_id) VALUES ($1, $2, $3, $4, $5) RETURNING user_id',
+      values: [prenom, nom, email, hashed_password, type],
+    };
+
+    const response = await client.query(query);
+
+    console.log("📦 Nouvel utilisateur créé :", response.rows[0]);
+
+    if (response.rowCount === 1) {
+      const user_id = response.rows[0].user_id;
+      return res.status(200).json({
+        message: "Connexion réussie !",
+        user_id
+      });
+    } else {
+      return res.status(400).json({ message: "Problème lors de la création du compte" });
     }
-    try {
 
-
-        let response = await client.query(query)
-
-        console.log(response)
-
-        // const result = await client.query(query)
-        // console.log(result)
-        //
-        // await client.end()
-        if (response.rowCount == 1) {
-            return res.json({message: "Connexion réussie !"});
-        } else {
-            return res.status(400).json({message: "Problème lors de la creation du compte"});
-        }
-    }catch (e){
-        console.log("error", e)
-        if(e.code == 23505){
-            return res.status(400).json({message: "Un compte exist deja avec cette adresse mail"});
-        }
-        return res.status(400).json({message: "Erreur interne du serveur."});
+  } catch (e) {
+    console.log("Erreur register:", e);
+    if (e.code === '23505') {
+      return res.status(400).json({ message: "Un compte existe déjà avec cette adresse mail" });
     }
+    return res.status(500).json({ message: "Erreur interne du serveur." });
+  }
 };
 
 

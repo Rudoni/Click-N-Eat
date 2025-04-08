@@ -8,7 +8,11 @@ module.exports = function(app) {
     app.delete("/article/delete", authController.deleteArticle)
     app.post("/addArticle", authController.addArticle)
     app.post("/authenticate", authController.authenticate);
-    app.post("/testOrder", authController.testOrder)
+
+    app.post("/order", authController.order)
+    app.post("/testOrderView", authController.testOrderView)
+
+
     app.post("/profile", authController.getProfile);
     app.put("/profile/update", authController.updateProfile);
     app.delete("/account/delete", authController.deleteAccount);
@@ -21,4 +25,10 @@ module.exports = function(app) {
     // Address routes
     app.post("/address/create", authController.createAddress);
     app.put("/address/update/:id", authController.updateAddress);
+
+    // Referral routes
+    app.post("/referral-code", authController.createReferralCode);
+    app.post("/referral-code/get", authController.getReferralCode);
+    app.get('/referred-users', authController.getReferredUsers);
+
 };

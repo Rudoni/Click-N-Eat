@@ -1,0 +1,74 @@
+.referral-container {
+    max-width: 500px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .referral-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .referral-code {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0.5rem 1.2rem;
+    background-color: #facc15;
+    border-radius: 8px;
+  }
+  
+  .btn-copy {
+    padding: 0.5rem 1rem;
+    background-color: #000;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .btn-copy:hover {
+    background-color: #333;
+  }
+  
+  .referral-desc {
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    color: #555;
+  }
+
+  .referred-list {
+    margin-top: 2rem;
+    text-align: left;
+  }
+  
+  .referred-list h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .referred-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .referred-list li {
+    background-color: #f9f9f9;
+    border: 1px solid #e2e2e2;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+    color: #444;
+  }
+  
+  
