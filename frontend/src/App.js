@@ -22,7 +22,11 @@ import Profile from './pages/client/Profile';
 import EditArticle from './pages/Restaurateur/EditArticle';
 import CreateMenu from './pages/Restaurateur/CreateMenu';
 import Parrainage from './pages/Common/Parrainage';
-
+import Livraison from './pages/delivery/Livraison';
+import HistoriqueLivraison from './pages/delivery/HistoriqueLivraison';
+import RecapCommande from './pages/delivery/RecapCommande';
+import LivrerCommande from './pages/delivery/LivrerCommande';
+import MobileFooterSwitcher from './components/MobileFooterSwitcher';
 
 function App() {
   return (
@@ -49,9 +53,14 @@ function App() {
         <Route path="/editArticle/:articleId" element={<EditArticle />} />
         <Route path="/editArticle" element={<EditArticle />} />
         <Route path="/createMenu" element={<CreateMenu />} />
+        <Route path="/livraison" element={<Livraison />} />
+        <Route path="/historique-livraisons" element={<HistoriqueLivraison />} />
+        <Route path="/accepter-commande" element={<RecapCommande />} />
+        <Route path="/livrer-commande" element={<LivrerCommande />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
+      <MobileFooterSwitcher />
     </Router>
   );
 }

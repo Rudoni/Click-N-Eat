@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import './Home.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Click-N-Eat";
-  }, []);
+
+    const token = localStorage.getItem("token");
+    const userType = parseInt(localStorage.getItem("user_type"));
+
+    if (token && userType === 4) {
+      navigate("/livraison");
+    }
+  }, [navigate]);
 
   const backgroundStyle = {
     backgroundImage: 'url("/Landing.jpeg")',

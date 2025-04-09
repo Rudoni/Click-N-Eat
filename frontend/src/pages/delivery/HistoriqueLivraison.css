@@ -1,0 +1,75 @@
+
+  .historique-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .historique-empty {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+    font-size: 1rem;
+  }
+  
+  .historique-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  }
+  
+  .historique-card p {
+    margin: 0.4rem 0;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  
+  .historique-footer {
+    text-align: center;
+    margin-top: 2rem;
+  }
+  
+  .historique-footer a {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #facc15;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    color: black;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .historique-footer a:hover {
+    background-color: #eab308;
+  }
+
+  .historique-container {
+    background-color: #f9f9f9;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Segoe UI', sans-serif;
+    padding-bottom: 6rem; 
+  }
+  
+  
+  @media screen and (max-width: 500px) {
+    .historique-container {
+      padding: 1.2rem;
+    }
+  
+    .historique-card p {
+      font-size: 0.95rem;
+    }
+  
+    .historique-footer a {
+      font-size: 0.9rem;
+    }
+  }
+  

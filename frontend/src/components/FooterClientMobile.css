@@ -1,0 +1,24 @@
+.footer-client {
+    display: none; 
+  }
+  
+  @media screen and (max-width: 768px) {
+    .footer-client {
+      display: flex;
+      justify-content: space-around;
+      background-color: #f3f4f6;
+      padding: 0.8rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-top: 1px solid #ccc;
+      z-index: 100;
+    }
+  
+    .footer-client img {
+      width: 28px;
+      height: 28px;
+    }
+  }
+  

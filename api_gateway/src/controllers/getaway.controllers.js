@@ -446,7 +446,7 @@ exports.updateRestaurant = async (req, res) => {
       const auth = await authenticated(token);
 
       if (auth.response) {
-        req.body.user_id = auth.info.user_id;
+        req.body.data = auth.info;
 
         const response = await axios.put(`${SERVICE_URL_restaurant}/restaurant/update`, req.body, {
           headers: { Authorization: `Bearer ${token}` }
@@ -587,39 +587,34 @@ exports.addMenu = async (req, res) => {
 
     const auth = await authenticated(token);
 
-    if (auth.response) {
-      // Ajout des infos utilisateur dans le corps
-      req.body.data = auth.info;
-
-      const form = new FormData();
-
-      // On reconstruit le body comme FormData
-      form.append("name", req.body.name);
-      form.append("price", req.body.price);
-      form.append("selectedArticles", JSON.stringify(req.body.selectedArticles));
-      form.append("data", JSON.stringify(auth.info));
-
-      if (req.file) {
-        form.append("image", req.file.buffer, {
-          filename: req.file.originalname,
-          contentType: req.file.mimetype,
-        });
-      }
-
-      const response = await axios.post(`${SERVICE_URL_restaurant}/addMenu`, form, {
-        headers: {
-          ...form.getHeaders(),
-          Authorization: token,
-        },
-      });
-
-      res.status(response.status).json(response.data);
-    } else {
-      res.status(400).json({ message: "vous n'êtes pas authentifié" });
+    if (!auth.response) {
+      return res.status(400).json({ message: "Vous n'êtes pas authentifié." });
     }
+
+    const userData = auth.info;
+
+    // On ajoute les infos utilisateur au body
+    const bodyData = {
+      name: req.body.name,
+      price: req.body.price,
+      image: req.body.image || null, // image en base64 si dispo
+      selectedArticles: req.body.selectedArticles,
+      data: userData,
+    };
+
+    // Envoi JSON classique
+    const response = await axios.post(`${SERVICE_URL_restaurant}/addMenu`, bodyData, {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return res.status(response.status).json(response.data);
+
   } catch (error) {
-    console.error('Erreur Axios:', error.message);
-    res.status(500).send('Erreur interne du serveur');
+    console.error("Erreur lors de l'appel à /addMenu :", error.message);
+    return res.status(500).json({ message: 'Erreur interne du serveur' });
   }
 };
 
