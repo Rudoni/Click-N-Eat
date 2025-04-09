@@ -69,7 +69,7 @@ const Header = () => {
               <>
                 <Link to="/restaurant-settings" className="btn light" onClick={() => setOpen(false)}>Paramètres Généraux</Link>
                 <Link to="/dashboard" className="btn light" onClick={() => setOpen(false)}>Tableau de bord</Link>
-                <Link to="/commandes" className="btn light" onClick={() => setOpen(false)}>Les commandes</Link>
+                <Link to="/OrderManagement" className="btn light" onClick={() => setOpen(false)}>Les commandes</Link>
                 <Link to="/carte" className="btn light" onClick={() => setOpen(false)}>La carte</Link>
               </>
             )}
