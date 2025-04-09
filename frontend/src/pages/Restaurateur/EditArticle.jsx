@@ -12,12 +12,12 @@ const EditArticle = () => {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { articleId } = useParams(); // récup l'ID depuis l'URL
+  const { articleId } = useParams();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     document.title = "Édition de l'article";
-    
+
     const fetchArticleData = async () => {
       try {
         const response = await fetch("http://localhost:3100/getArticle", {
@@ -26,38 +26,57 @@ const EditArticle = () => {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ article_id: articleId }), // Envoie l'ID dans le body
+          body: JSON.stringify({ article_id: articleId }),
         });
 
         const data = await response.json();
-        if (response.ok && data.article) {
+        if (response.ok && data.data) {
+          const article = data.data;
+        
           setFormData({
-            name: data.article.name || '',
-            type: data.article.type || '',
-            price: data.article.price || '',
-            solo: data.article.solo || false,
+            name: article.article_name || '',
+            type: article.article_type_id?.toString() || '',
+            price: article.price || '',
+            solo: article.can_be_sold_individually || false,
           });
-
-          // Si une image est présente, afficher l'aperçu
-          if (data.article.image) {
-            const base64 = `data:image/jpeg;base64,${data.article.image}`;
+        
+          // Aperçu image si image présente
+          if (article.article_image) {
+            const base64 = `data:image/jpeg;base64,${article.article_image}`;
             setImagePreview(base64);
           }
-        } else {
+        }
+        else {
           setError(data.message || "Erreur lors du chargement de l'article.");
         }
       } catch (error) {
         setError("Erreur lors de la connexion au serveur.");
       }
     };
+
     fetchArticleData();
+  }, [articleId, token]);
 
-  }, []);
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
 
-
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleDelete = async () => {
-
     try {
       const response = await fetch(`http://localhost:3100/article/delete`, {
         method: "DELETE",
@@ -82,9 +101,6 @@ const EditArticle = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-
-    //TODO >
     try {
       const response = await fetch(`http://localhost:3100/updateArticle/${articleId}`, {
         method: "PUT",

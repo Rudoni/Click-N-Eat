@@ -1,0 +1,46 @@
+.gestion-commandes {
+    padding: 20px;
+  }
+  
+  .commandes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .commande-card {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 15px;
+    background-color: #f9f9f9;
+  }
+  
+  .commande-card h3 {
+    margin-bottom: 10px;
+  }
+  
+  .commande-contenu {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .commande-contenu ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  
+  .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
