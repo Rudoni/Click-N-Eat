@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Profile.css';
+import FooterLivreur from '../../components/FooterLivreur';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -10,9 +12,9 @@ export default function Profile() {
     adress_name: ''
   });
   const [showPasswordFields, setShowPasswordFields] = useState(false);
-
   const [profileFeedback, setProfileFeedback] = useState({ message: '', type: '' });
   const [addressFeedback, setAddressFeedback] = useState({ message: '', type: '' });
+  const navigate = useNavigate();
 
   const showProfileFeedback = (message, type = 'success') => {
     setProfileFeedback({ message, type });
@@ -26,6 +28,7 @@ export default function Profile() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     const fetchUserInfos = async () => {
       try {
         const response = await fetch("http://localhost:3100/profile", {
@@ -38,22 +41,25 @@ export default function Profile() {
         });
 
         const data = await response.json();
-        if (response.ok) {
+
+        if (response.ok && data?.data) {
           setUser({ ...data.data, password: '', password2: '' });
           if (data.data.addresses?.length > 0) {
             setAddress(data.data.addresses[0]);
           }
         } else {
-          showProfileFeedback(data.message || "Erreur de chargement.", 'error');
+          localStorage.removeItem("token");
+          navigate("/login");
         }
       } catch (error) {
         console.error("Erreur réseau :", error);
-        showProfileFeedback("Erreur réseau lors du chargement du profil.", 'error');
+        localStorage.removeItem("token");
+        navigate("/login");
       }
     };
 
     fetchUserInfos();
-  }, []);
+  }, [navigate]);
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -138,7 +144,7 @@ export default function Profile() {
     }
   };
 
-  if (!user) return <div className="text-center py-8 font-semibold">Chargement...</div>;
+  if (!user) return null;
 
   return (
     <div className="profile-container">
@@ -204,6 +210,7 @@ export default function Profile() {
           <button onClick={handleAddressSubmit} className="btn-primary">
             {address.adress_id ? "Mettre à jour l’adresse" : "Ajouter l’adresse"}
           </button>
+
           <button
             className="btn-danger"
             onClick={async () => {
@@ -223,7 +230,7 @@ export default function Profile() {
                 const data = await response.json();
                 if (response.ok) {
                   localStorage.removeItem("token");
-                  window.location.href = "/"; 
+                  window.location.href = "/";
                 } else {
                   alert(data.message || "Erreur lors de la suppression du compte.");
                 }
@@ -235,6 +242,7 @@ export default function Profile() {
           >
             Supprimer mon compte
           </button>
+
           {addressFeedback.message && (
             <div className={`feedback-message ${addressFeedback.type}`}>
               {addressFeedback.message}
@@ -242,6 +250,16 @@ export default function Profile() {
           )}
         </div>
       </div>
+
+      <FooterLivreur />
+
+      {window.innerWidth <= 768 && (
+        <div className="mobile-parrainage-btn">
+          <button onClick={() => navigate('/parrainage')}>
+            Parrainer mes amis
+          </button>
+        </div>
+      )}
     </div>
   );
 }

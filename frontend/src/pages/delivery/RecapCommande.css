@@ -1,0 +1,59 @@
+.recap-container {
+    background-color: #f9f9f9;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    box-sizing: border-box;
+    position: relative;
+    padding-bottom: 6rem; 
+  }
+  
+  .recap-container h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .recap-container p {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+  
+  .qr-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background-color: #22c55e;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 9999px;
+    padding: 0.9rem 1.2rem;
+    font-size: 1rem;
+    width: 100%;
+    margin-top: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .qr-button:hover {
+    background-color: #16a34a;
+  }
+  
+  @media screen and (max-width: 500px) {
+    .recap-container {
+      padding: 1.2rem;
+      padding-bottom: 7rem;
+    }
+  
+    .qr-button {
+      font-size: 0.95rem;
+      padding: 0.8rem 1rem;
+    }
+  }
+  
