@@ -102,7 +102,7 @@ const EditArticle = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:3100/updateArticle/${articleId}`, {
+      const response = await fetch(`http://localhost:3100/Article/update`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
