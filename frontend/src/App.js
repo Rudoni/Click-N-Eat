@@ -27,6 +27,8 @@ import HistoriqueLivraison from './pages/delivery/HistoriqueLivraison';
 import RecapCommande from './pages/delivery/RecapCommande';
 import LivrerCommande from './pages/delivery/LivrerCommande';
 import MobileFooterSwitcher from './components/MobileFooterSwitcher';
+import RestaurantDashboard from './pages/Restaurateur/Dashboard';
+import GestionCommandes from './pages/Restaurateur/OrderManagement';
 
 function App() {
   return (
@@ -57,6 +59,9 @@ function App() {
         <Route path="/historique-livraisons" element={<HistoriqueLivraison />} />
         <Route path="/accepter-commande" element={<RecapCommande />} />
         <Route path="/livrer-commande" element={<LivrerCommande />} />
+        <Route path="/Dashboard" element={<RestaurantDashboard />} />
+        <Route path="/OrderManagement" element={<GestionCommandes />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
