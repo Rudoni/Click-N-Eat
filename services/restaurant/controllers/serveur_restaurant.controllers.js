@@ -378,7 +378,7 @@ exports.addMenu = async (req, res) => {
 
     // Étape 2 - Insertion du menu
     const queryInsertMenu = {
-      text: `INSERT INTO menu(restaurant_id, menu_name, menu_price, menu_image)
+      text: `INSERT INTO menu(restaurant_id, menu_name, price, menu_image)
              VALUES ($1, $2, $3, $4)
              RETURNING menu_id`,
       values: [restaurantId, name, price, image],
