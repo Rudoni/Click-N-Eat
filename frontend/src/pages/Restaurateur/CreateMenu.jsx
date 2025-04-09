@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './CreateMenu.css';
+import { useNavigate } from 'react-router-dom';
 
 const CreateMenu = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ const CreateMenu = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [articles, setArticles] = useState([]);
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const CreateMenu = () => {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({}), // corps vide
+          body: JSON.stringify({}),
         });
 
         const data = await response.json();
@@ -62,10 +63,67 @@ const CreateMenu = () => {
     setFormData({ ...formData, selectedArticles: selected });
   };
 
-  const handleSubmit = (e) => {
+  const convertImageToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(",")[1]); // enlever "data:image/jpeg;base64,"
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const decodeToken = (token) => {
+    try {
+      const payload = token.split('.')[1];
+      const decoded = JSON.parse(atob(payload));
+      return decoded;
+    } catch {
+      return null;
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Menu créé :", formData);
-    // À remplacer par un POST vers ton API pour créer un menu
+
+    try {
+      const userData = decodeToken(token);
+      if (!userData || !userData.user_id) {
+        setError("Utilisateur non identifié.");
+        return;
+      }
+
+      const base64Image = formData.image
+        ? await convertImageToBase64(formData.image)
+        : null;
+
+      const bodyData = {
+        name: formData.name,
+        price: formData.price,
+        image: base64Image,
+        selectedArticles: formData.selectedArticles,
+      };
+
+      console.log("JSON envoyé :", JSON.stringify(bodyData, null, 2));
+
+      const response = await fetch("http://localhost:3100/addMenu", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        navigate("/carte"); // ou la route de ton choix
+      } else {
+        setError(data.message || "Erreur lors de la création du menu.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Erreur lors de la création du menu.");
+    }
   };
 
   return (
