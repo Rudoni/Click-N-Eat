@@ -7,7 +7,7 @@ exports.createOrder = async (req, res) => {
     const {data, items, resto} = req.body;
 
     console.log(data)
-    const clientOrder = {client: data, items: items, resto: resto}
+    const clientOrder = {client: data, items: items, resto: resto, state:"en attante"}
 
     try {
         const result = await collection.insertOne(clientOrder);
@@ -29,7 +29,8 @@ exports.viewOrder = async (req,res) =>{
     console.log(data.user_id)
     switch (data.user_type){
         case 1:
-            result = await collection.find({ "client.user_id": data.user_id }).toArray();
+            result = await collection.find({}).toArray();
+            // result = await collection.find({ "client.user_id": data.user_id }).toArray();
             break;
         case 2:
             // result = await collection.find({ "resto.resto_id": resto.resto_id }).toArray();

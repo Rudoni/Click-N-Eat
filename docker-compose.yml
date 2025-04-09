@@ -12,7 +12,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - mynetwork
-    restart: unless-stopped
+#    restart: unless-stopped
 
   mongodb:
     image: mongo:6.0
@@ -26,7 +26,7 @@ services:
       - mongodb_data:/data/db
     networks:
       - mynetwork
-    restart: unless-stopped
+#    restart: unless-stopped
 
   account-service:
     build:
@@ -43,7 +43,7 @@ services:
     volumes:
       - ./services/account/serveur_node:/app
       - /app/node_modules
-    restart: unless-stopped
+#    restart: unless-stopped
 
   restaurant-service:
     build:
@@ -59,7 +59,7 @@ services:
       - mynetwork
     volumes:
       - ./services/restaurant:/app
-    restart: unless-stopped
+#    restart: unless-stopped
 
   referral-service:
     build:
@@ -76,7 +76,7 @@ services:
       - mynetwork
     volumes:
       - ./services/referral:/app
-    restart: unless-stopped
+#    restart: unless-stopped
 
   order-service:
     build:
@@ -92,7 +92,7 @@ services:
       - mynetwork
     volumes:
       - ./services/order:/app
-    restart: unless-stopped
+#    restart: unless-stopped
 
   delivery-service:
     build:
@@ -108,7 +108,7 @@ services:
       - mynetwork
     volumes:
       - ./services/delivery:/app
-    restart: unless-stopped
+#    restart: unless-stopped
 
   api-gateway:
     build:
@@ -123,7 +123,7 @@ services:
       - mynetwork
     volumes:
       - ./api_gateway:/app
-    restart: unless-stopped
+#    restart: unless-stopped
 
   frontend:
     build:
@@ -139,7 +139,7 @@ services:
       - ./frontend:/app
     depends_on:
       - api-gateway
-    restart: unless-stopped
+#    restart: unless-stopped
 
 volumes:
   pgdata:
