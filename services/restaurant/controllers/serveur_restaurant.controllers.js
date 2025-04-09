@@ -290,7 +290,8 @@ exports.getMenu = async (req, res) => {
 };
 
 exports.getListeArticleMenuRestaurant = async (req, res) => {
-  const { user_id } = req.body;
+  const { data } = req.body;
+  const user_id = data.user_id
 
   if (!user_id) {
       return res.status(400).json({ message: "user_id requis" });
@@ -352,5 +353,200 @@ exports.getListeArticleMenuRestaurant = async (req, res) => {
   } catch (e) {
       console.error("Erreur lors de la récupération des articles et menus:", e);
       return res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+};
+
+exports.addMenu = async (req, res) => {
+  const { name, price, image, selectedArticles, data } = req.body;
+  
+  const userId = data.user_id;
+
+  try {
+    // Étape 1 - Récupération du restaurant_id
+    const queryGetRestaurantId = {
+      text: "SELECT restaurant_id FROM restaurant WHERE user_id = $1",
+      values: [userId],
+    };
+
+    const result = await client.query(queryGetRestaurantId);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Aucun restaurant trouvé pour cet utilisateur." });
+    }
+
+    const restaurantId = result.rows[0].restaurant_id;
+
+    // Étape 2 - Insertion du menu
+    const queryInsertMenu = {
+      text: `INSERT INTO menu(restaurant_id, menu_name, menu_price, menu_image)
+             VALUES ($1, $2, $3, $4)
+             RETURNING menu_id`,
+      values: [restaurantId, name, price, image],
+    };
+
+    const menuResult = await client.query(queryInsertMenu);
+
+    if (menuResult.rowCount !== 1) {
+      return res.status(400).json({ message: "Problème lors de la création du menu." });
+    }
+
+    const menuId = menuResult.rows[0].menu_id;
+
+    // Étape 3 - Insertion des liens articles <-> menu
+    const articlesArray = typeof selectedArticles === 'string'
+      ? JSON.parse(selectedArticles)
+      : selectedArticles;
+
+    for (const articleId of articlesArray) {
+      const linkQuery = {
+        text: 'INSERT INTO list_article_menu(menu_id, article_id) VALUES ($1, $2)',
+        values: [menuId, articleId],
+      };
+      await client.query(linkQuery);
+    }
+
+    return res.status(201).json({ message: "Création du menu réussie !" });
+
+  } catch (e) {
+    console.error("Erreur lors de la création du menu :", e);
+    return res.status(500).json({ message: "Erreur interne du serveur." });
+  }
+};
+
+exports.deleteMenu = async (req, res) => {
+  const { menu_id } = req.body;
+
+  if (!menu_id) {
+    return res.status(400).json({ message: "ID menu manquant." });
+  }
+
+  try {
+    const query = {
+      text: 'DELETE FROM menu WHERE menu_id = $1',
+      values: [menu_id],
+    };
+
+    await client.query(query);
+    return res.status(200).json({ message: "Menu supprimé avec succès." });
+  } catch (error) {
+    console.error("Erreur suppression Menu :", error);
+    return res.status(500).json({ message: "Erreur interne lors de la suppression du menu." });
+  }
+};
+
+exports.updateArticle = async (req, res) => {
+  const { article_id, name, type, price, solo, image, data } = req.body;
+
+  const userId = data.user_id;
+
+  try {
+    // Étape 1 – Vérifier que le restaurant existe pour ce user
+    const queryGetRestaurantId = {
+      text: "SELECT restaurant_id FROM restaurant WHERE user_id = $1",
+      values: [userId],
+    };
+
+    const result = await client.query(queryGetRestaurantId);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Aucun restaurant trouvé pour cet utilisateur." });
+    }
+
+    const restaurantId = result.rows[0].restaurant_id;
+
+    // Étape 2 – Mettre à jour l'article (en sécurisant bien avec restaurant_id)
+    const queryUpdateArticle = {
+      text: `UPDATE article 
+             SET article_name = $1, 
+                 article_type_id = $2, 
+                 price = $3, 
+                 can_be_sold_individually = $4, 
+                 article_image = $5 
+             WHERE article_id = $6 AND restaurant_id = $7`,
+      values: [name, type, price, solo, image, article_id, restaurantId],
+    };
+
+    const updateResult = await client.query(queryUpdateArticle);
+
+    if (updateResult.rowCount === 0) {
+      return res.status(404).json({ message: "Aucun article trouvé ou vous n'avez pas les droits." });
+    }
+
+    res.status(200).json({ message: "Article mis à jour avec succès." });
+
+  } catch (e) {
+    console.error("Erreur updateArticle :", e);
+    res.status(500).json({ message: "Erreur interne du serveur." });
+  }
+};
+
+exports.updateMenu = async (req, res) => {
+  const { menu_id, name, price, image, selectedArticles, data } = req.body;
+
+  const userId = data.user_id;
+
+  try {
+    // Étape 1 – Récupérer le restaurant_id
+    const queryRestaurant = {
+      text: "SELECT restaurant_id FROM restaurant WHERE user_id = $1",
+      values: [userId],
+    };
+
+    const resultRestaurant = await client.query(queryRestaurant);
+    if (resultRestaurant.rows.length === 0) {
+      return res.status(404).json({ message: "Aucun restaurant trouvé pour cet utilisateur." });
+    }
+
+    const restaurantId = resultRestaurant.rows[0].restaurant_id;
+
+    // Étape 2 – Vérifier que le menu appartient bien à ce restaurant
+    const queryCheckMenu = {
+      text: "SELECT * FROM menu WHERE menu_id = $1 AND restaurant_id = $2",
+      values: [menu_id, restaurantId],
+    };
+
+    const resultMenu = await client.query(queryCheckMenu);
+    if (resultMenu.rows.length === 0) {
+      return res.status(403).json({ message: "Ce menu ne vous appartient pas." });
+    }
+
+    // Étape 3 – Update table menu
+    const queryUpdateMenu = {
+      text: `UPDATE menu 
+             SET menu_name = $1, price = $2, menu_image = $3 
+             WHERE menu_id = $4`,
+      values: [name, price, image, menu_id],
+    };
+    await client.query(queryUpdateMenu);
+
+    // Étape 4 – Mettre à jour les articles liés à ce menu
+    // On récupère les articles actuellement liés
+    const currentArticlesQuery = {
+      text: "SELECT article_id FROM list_article_menu WHERE menu_id = $1",
+      values: [menu_id],
+    };
+
+    const currentArticlesResult = await client.query(currentArticlesQuery);
+    const currentArticleIds = currentArticlesResult.rows.map(row => row.article_id);
+
+    // Déterminer les articles à ajouter et à supprimer
+    const toAdd = selectedArticles.filter(id => !currentArticleIds.includes(id));
+    const toRemove = currentArticleIds.filter(id => !selectedArticles.includes(id));
+
+    // Supprimer les anciens
+    for (const articleId of toRemove) {
+      await client.query("DELETE FROM list_article_menu WHERE menu_id = $1 AND article_id = $2", [menu_id, articleId]);
+    }
+
+    // Ajouter les nouveaux
+    for (const articleId of toAdd) {
+      await client.query("INSERT INTO list_article_menu(menu_id, article_id) VALUES ($1, $2)", [menu_id, articleId]);
+    }
+
+    return res.status(200).json({ message: "Menu mis à jour avec succès." });
+
+  } catch (e) {
+    console.error("Erreur updateMenu :", e);
+    return res.status(500).json({ message: "Erreur interne du serveur." });
   }
 };

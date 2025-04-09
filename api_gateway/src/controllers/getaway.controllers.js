@@ -517,7 +517,7 @@ exports.getListeArticleMenuRestaurant = async (req, res) => {
             res.status(400).json({ message: "Vous n'êtes pas authentifié" });
         }
     } catch (error) {
-        console.error('Erreur Axios (getListeArticleMenu):', error.message);
+        console.error('Erreur Axios (getListeArticleMenuRestaurant):', error.message);
         res.status(500).send('Erreur interne du serveur');
     }
 };
@@ -581,3 +581,104 @@ exports.getReferredUsers = async (req, res) => {
   }
 };
 
+exports.addMenu = async (req, res) => {
+  try {
+    const token = req.headers.authorization || '';
+
+    const auth = await authenticated(token);
+
+    if (auth.response) {
+      // Ajout des infos utilisateur dans le corps
+      req.body.data = auth.info;
+
+      const form = new FormData();
+
+      // On reconstruit le body comme FormData
+      form.append("name", req.body.name);
+      form.append("price", req.body.price);
+      form.append("selectedArticles", JSON.stringify(req.body.selectedArticles));
+      form.append("data", JSON.stringify(auth.info));
+
+      if (req.file) {
+        form.append("image", req.file.buffer, {
+          filename: req.file.originalname,
+          contentType: req.file.mimetype,
+        });
+      }
+
+      const response = await axios.post(`${SERVICE_URL_restaurant}/addMenu`, form, {
+        headers: {
+          ...form.getHeaders(),
+          Authorization: token,
+        },
+      });
+
+      res.status(response.status).json(response.data);
+    } else {
+      res.status(400).json({ message: "vous n'êtes pas authentifié" });
+    }
+  } catch (error) {
+    console.error('Erreur Axios:', error.message);
+    res.status(500).send('Erreur interne du serveur');
+  }
+};
+
+exports.deleteMenu = async (req, res) => {
+  try {
+      const token = req.headers.authorization || '';
+      const auth = await authenticated(token);
+
+      if (!auth.response) {
+        return res.status(403).json({ message: "Non autorisé." });
+      }
+
+      const response = await axios.delete(`${SERVICE_URL_restaurant}/menu/delete`, {
+        data: { menu_id: req.body.menu_id },
+      });
+
+      return res.status(200).json(response.data);
+    } catch (error) {
+      return res.status(500).json({ message: "Erreur serveur" });
+    }
+};
+
+exports.updateArticle = async (req, res) => {
+  try {
+    const token = req.headers.authorization || '';
+    const auth = await authenticated(token);
+
+    if (!auth.response) {
+      return res.status(400).json({ message: "Vous n'êtes pas authentifié." });
+    }
+
+    // On insère les infos utilisateur dans le body
+    req.body.data = auth.info;
+
+    // Appel vers le microservice restaurant
+    const response = await axios.post(`${SERVICE_URL_restaurant}/updateArticle`, req.body);
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error("Erreur API Gateway (updateArticle) :", error.message);
+    res.status(500).json({ message: "Erreur interne du serveur." });
+  }
+};
+
+exports.updateMenu = async (req, res) => {
+  try {
+    const token = req.headers.authorization || '';
+    const auth = await authenticated(token);
+
+    if (!auth.response) {
+      return res.status(400).json({ message: "Vous n'êtes pas authentifié." });
+    }
+
+    req.body.data = auth.info;
+
+    const response = await axios.post(`${SERVICE_URL_restaurant}/updateMenu`, req.body);
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error("Erreur API Gateway (updateMenu) :", error.message);
+    res.status(500).json({ message: "Erreur interne du serveur." });
+  }
+};

@@ -8,6 +8,7 @@ module.exports = function(app) {
     app.delete("/article/delete", authController.deleteArticle)
     app.post("/addArticle", authController.addArticle)
     app.post("/authenticate", authController.authenticate);
+    app.delete("/menu/delete", authController.deleteMenu)
 
     app.post("/order", authController.order)
     app.post("/testOrderView", authController.testOrderView)
@@ -22,6 +23,9 @@ module.exports = function(app) {
     app.post("/getArticle", authController.getArticle);
     app.post("/getMenu", authController.getMenu);
     app.post("/getListeArticleMenuRestaurant", authController.getListeArticleMenuRestaurant);
+    app.post("/addMenu", authController.addMenu)
+    app.put("/article/update", authController.updateArticle);
+    app.put("/menu/update", authController.updateMenu);
 
     // Address routes
     app.post("/address/create", authController.createAddress);
