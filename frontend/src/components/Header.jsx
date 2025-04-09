@@ -7,8 +7,7 @@ const Header = () => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
 
     const fetchUserInfos = async () => {
       try {
@@ -21,7 +20,6 @@ const Header = () => {
         });
 
         const data = await response.json();
-        console.log("Données récupérées :", data);
         if (response.ok) {
           setUser(data.data);
         } else {
@@ -31,11 +29,17 @@ const Header = () => {
         console.error("Erreur réseau :", error);
       }
     };
-    if(token){
+
+    if (token) {
       fetchUserInfos();
     }
   }, []);
-  
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.reload();
+  };
+
   return (
     <header className="header">
       <Link to="/" className="logo-link">
@@ -50,28 +54,28 @@ const Header = () => {
         ) : (
           <>
             <Link to="/parrainage" className="btn light" onClick={() => setOpen(false)}>Parrainer</Link>
-            {/* Partie Client */
-            console.log("user", user)}
-            {user.user_type == 1 && (
+
+            {/* Partie Client */}
+            {user.user_type === 1 && (
               <>
-              <Link to="/commander" className="btn light" onClick={() => setOpen(false)}>Commander</Link>
-              <Link to="/cart" className="btn light" onClick={() => setOpen(false)}>Panier</Link>
-              <Link to="/profile" className="btn light" onClick={() => setOpen(false)}>Profile</Link>
+                <Link to="/commander" className="btn light" onClick={() => setOpen(false)}>Commander</Link>
+                <Link to="/cart" className="btn light" onClick={() => setOpen(false)}>Panier</Link>
+                <Link to="/profile" className="btn light" onClick={() => setOpen(false)}>Profile</Link>
               </>
             )}
 
             {/* Partie Restaurateur */}
-            {user.user_type == 2 && (
+            {user.user_type === 2 && (
               <>
                 <Link to="/restaurant-settings" className="btn light" onClick={() => setOpen(false)}>Paramètres Généraux</Link>
-                <Link to="/tableau-de-bord" className="btn light" onClick={() => setOpen(false)}>Tableau de bord</Link>
+                <Link to="/dashboard" className="btn light" onClick={() => setOpen(false)}>Tableau de bord</Link>
                 <Link to="/commandes" className="btn light" onClick={() => setOpen(false)}>Les commandes</Link>
                 <Link to="/carte" className="btn light" onClick={() => setOpen(false)}>La carte</Link>
               </>
             )}
 
             {/* Partie Développeur tiers */}
-            {user.user_type == 3 && (
+            {user.user_type === 3 && (
               <>
                 <Link to="/logs" className="btn light" onClick={() => setOpen(false)}>Logs</Link>
                 <Link to="/deploiement" className="btn light" onClick={() => setOpen(false)}>Déploiement de service</Link>
@@ -82,13 +86,16 @@ const Header = () => {
             )}
 
             {/* Partie Livreur */}
-            {user.user_type == 4 && (
+            {user.user_type === 4 && (
               <>
                 <Link to="/livraison" className="btn light" onClick={() => setOpen(false)}>Livraison</Link>
                 <Link to="/historique-livraisons" className="btn light" onClick={() => setOpen(false)}>Historique des livraisons</Link>
                 <Link to="/profile" className="btn light" onClick={() => setOpen(false)}>Profile</Link>
               </>
             )}
+
+            {/* Déconnexion */}
+            <button className="btn red" onClick={handleLogout}>Déconnexion</button>
           </>
         )}
       </nav>
