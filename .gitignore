@@ -3,3 +3,4 @@
 *package-lock.json
 *.json
 *.env*
+api_gateway/package-lock.json
