@@ -61,10 +61,44 @@ const RestaurantSettings = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Modifications envoyées :', form);
+    setError('');
+    const token = localStorage.getItem("token");
+  
+    try {
+      const bodyData = {
+        restaurantName: form.restaurantName,
+        description: form.description,
+        country: form.country,
+        city: form.city,
+        postalCode: form.postalCode,
+        address: form.address,
+        // PAS d'image pour le moment
+      };
+  
+      const response = await fetch("http://localhost:3100/restaurant/update", {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || "Erreur lors de la mise à jour");
+      }
+  
+      alert("Paramètres enregistrés avec succès !");
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Erreur inconnue");
+    }
   };
+  
 
   return (
     <section className="restaurant-settings-page">

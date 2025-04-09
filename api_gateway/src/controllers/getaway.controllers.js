@@ -446,7 +446,7 @@ exports.updateRestaurant = async (req, res) => {
       const auth = await authenticated(token);
 
       if (auth.response) {
-        req.body.user_id = auth.info.user_id;
+        req.body.data = auth.info;
 
         const response = await axios.put(`${SERVICE_URL_restaurant}/restaurant/update`, req.body, {
           headers: { Authorization: `Bearer ${token}` }
