@@ -2,19 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Command.css';
 
-// Liste simulée des restaurants (à remplacer par une requête API plus tard)
-const restaurants = [
-  { id: 1, name: 'Le Gourmet', image: '/le-gourmet.png' },
-  { id: 2, name: 'Pizza Express', image: '/pizza-express.png' },
-  { id: 3, name: 'Sushi World', image: '/sushi-world.png' },
-  { id: 4, name: 'Burger House', image: '/burger-house.png' }
-];
-
 const Command = () => {
+  const [restaurants, setRestaurants] = useState([]);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Commander en ligne";
+
+    const fetchRestaurants = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:3100/restaurant/list", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        console.log("Réponse du serveur :", data);
+        if (response.ok) {
+          setRestaurants(data.data); // On suppose que "data" contient la liste des restaurants
+        } else {
+          setError(data.message || "Erreur lors de la récupération des restaurants");
+        }
+      } catch (err) {
+        setError("Erreur de communication avec le serveur");
+      }
+    };
+
+    fetchRestaurants();
   }, []);
 
   const handleNavigate = (id) => {
@@ -25,26 +44,25 @@ const Command = () => {
     <div className="restaurant-page">
       <div className="back-arrow" onClick={() => navigate(-1)}>←</div>
       <h2 className="title">Restaurants disponibles</h2>
+
+      {error && <p className="error-message">{error}</p>}
+
       <div className="restaurant-list">
-        {restaurants.map((restaurant) => (
-          <div 
-            key={restaurant.id} 
-            className="restaurant-card" 
-            onClick={() => handleNavigate(restaurant.id)}
-            style={{ cursor: 'pointer' }}
-          >
-            <img
-              src={restaurant.image}
-              alt={restaurant.name}
-              className="restaurant-image"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = '/default.jpg'; // fallback local
-              }}
-            />
-            <h3 className="restaurant-name">{restaurant.name}</h3>
-          </div>
-        ))}
+        {restaurants.length > 0 ? (
+          restaurants.map((restaurant) => (
+            <div
+              key={restaurant.restaurant_id}
+              className="restaurant-card"
+              onClick={() => handleNavigate(restaurant.restaurant_id)}
+              style={{ cursor: 'pointer' }}
+            >
+              <h3 className="restaurant-name">{restaurant.restaurant_name}</h3>
+              <p className="restaurant-description">{restaurant.restaurant_description}</p>
+            </div>
+          ))
+        ) : (
+          <p>Aucun restaurant disponible</p>
+        )}
       </div>
     </div>
   );
