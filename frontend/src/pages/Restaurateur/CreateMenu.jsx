@@ -17,6 +17,14 @@ const CreateMenu = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+
+    const userType = localStorage.getItem("user_type");
+
+    if (userType !== "2") {
+      navigate("/unauthorized");
+      return;
+    }
+
     const fetchArticles = async () => {
       try {
         const response = await fetch("http://localhost:3100/getListeArticleMenuRestaurant", {

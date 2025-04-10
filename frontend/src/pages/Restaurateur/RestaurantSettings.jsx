@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './RestaurantSettings.css';
 
 const RestaurantSettings = () => {
@@ -10,13 +11,24 @@ const RestaurantSettings = () => {
     postalCode: '',
     address: '',
   });
-
+  const navigate = useNavigate();
   const [mainImagePreview, setMainImagePreview] = useState(null);
   const [backgroundImagePreview, setBackgroundImagePreview] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
+    const userType = localStorage.getItem("user_type");
+    if (userType !== "2") {
+      navigate("/unauthorized");
+      return;
+    }
+    if (!token) {
+      navigate("/unauthorized");
+      return;
+    }
+
     const fetchUserInfos = async () => {
       try {
         const response = await fetch("http://localhost:3100/getRestaurantInfo", {

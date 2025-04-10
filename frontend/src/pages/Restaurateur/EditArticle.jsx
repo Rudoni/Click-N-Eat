@@ -18,6 +18,16 @@ const EditArticle = () => {
   useEffect(() => {
     document.title = "Édition de l'article";
 
+    const userType = localStorage.getItem("user_type");
+    if (userType !== "2") {
+      navigate("/unauthorized");
+      return;
+    }
+    if (!token) {
+      navigate("/unauthorized");
+      return;
+    }
+
     const fetchArticleData = async () => {
       try {
         const response = await fetch("http://localhost:3100/getArticle", {

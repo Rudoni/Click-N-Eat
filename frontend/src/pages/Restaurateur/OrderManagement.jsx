@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './OrderManagement.css';
 
 const GestionCommandes = () => {
+  const navigate = useNavigate();
   const [commandes, setCommandes] = useState([]);
   const [error, setError] = useState("");
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    document.title = "Gestion des Commandes";
+
+    const userType = localStorage.getItem("user_type");
+    if (userType !== "2") {
+      navigate("/unauthorized");
+      return;
+    }
+    if (!token) {
+      navigate("/unauthorized");
+      return;
+    }
+
     const fetchCommandes = async () => {
       try {
         const response = await fetch("http://localhost:3100/getCommandesRestaurant", {

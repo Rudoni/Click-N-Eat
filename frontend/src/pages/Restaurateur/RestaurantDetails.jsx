@@ -118,6 +118,16 @@ const RestaurantDetails = () => {
     document.title = "Détails du restaurant";
     let isMounted = true;
 
+    const userType = localStorage.getItem("user_type");
+    if (userType !== "2") {
+      navigate("/unauthorized");
+      return;
+    }
+    if (!token) {
+      navigate("/unauthorized");
+      return;
+    }
+
     const resto = restaurantsData.find(r => r.id === parseInt(id));
     if (isMounted && resto) setRestaurant(resto);
 

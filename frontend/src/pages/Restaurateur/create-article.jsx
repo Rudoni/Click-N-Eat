@@ -17,6 +17,19 @@ const CreateArticle = () => {
 
   useEffect(() => {
     document.title = "Création de l'article";
+    const token = localStorage.getItem("token")
+
+    const userType = localStorage.getItem("user_type");
+
+    if (userType !== "2") {
+      navigate("/unauthorized");
+      return;
+    }
+    if (!token) {
+      navigate("/unauthorized");
+      return;
+    }
+
   }, []);
 
   const handleImageChange = (e) => {

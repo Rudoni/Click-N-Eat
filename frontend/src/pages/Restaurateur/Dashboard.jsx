@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
 const RestaurantDashboard = () => {
+  const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState({
     name: '',
     description: ''
@@ -9,6 +11,15 @@ const RestaurantDashboard = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const userType = localStorage.getItem("user_type");
+    if (userType !== "2") {
+      navigate("/unauthorized");
+      return;
+    }
+    if (!token) {
+      navigate("/unauthorized");
+      return;
+    }
 
     const fetchRestaurantInfo = async () => {
       try {
