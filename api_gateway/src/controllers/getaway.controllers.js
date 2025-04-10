@@ -156,8 +156,9 @@ exports.login = async (req, res) => {
         console.log("req.body", req.body)
         // Redirection de la requête POST vers le serveur d'authentification (localhost:3000)
         const response = await axios.post(`${SERVICE_URL_account}/login`, req.body);
-
-        console.log("rep", response)
+        const auth = await authenticated("Bearer "+response.data.authorization);
+        response.data.user_info = auth.info
+        console.log("rep", response.data)
         // Retourner la réponse du serveur d'authentification au client
         res.status(response.status).json(response.data);
     } catch (error) {
@@ -233,6 +234,8 @@ exports.authenticate = async (req, res) => {
         // Envoi de la requête avec les headers
         const response = await axios.post(`${SERVICE_URL_account}/authenticate`, req.body, config);
         // console.log("response auth", response);
+        const auth = await authenticated(token)
+        response.data.user_info = auth.info
         res.status(response.status).json(response.data);
     } catch (error) {
         if (error.response && error.response.status === 400) {
@@ -252,7 +255,7 @@ exports.order = async (req, res) => {
 
         const token = req.headers.authorization || '';
 
-        auth = await authenticated(token)
+        const auth = await authenticated(token)
 
         if (auth.response) {
 

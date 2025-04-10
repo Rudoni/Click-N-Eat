@@ -1,12 +1,17 @@
 const client = require('../db'); // Importer la connexion MongoDB
 
+const notify = require("../server_order");
+
+
 const db = client.db('restaurant'); // Choisir la base de données
 const collection = db.collection('orders'); // Sélectionner une collection
 
 exports.createOrder = async (req, res) => {
-    const {data, items, resto} = req.body;
+    // const {data, items, resto} = req.body;
+    const {data, items} = req.body;
 
     console.log(data)
+    const resto = {restaurantId: 2}
     const clientOrder = {client: data, items: items, resto: resto, state:"en attante"}
 
     try {
@@ -14,6 +19,7 @@ exports.createOrder = async (req, res) => {
 
         if (result.acknowledged) {
             res.status(200).json({message: 'ID de la commande insérée:'+ result.insertedId});
+            notify.notifyNewOrder(2, clientOrder)
         } else {
             console.log('L\'insertion a échoué');
             res.status(400).json({message: "erreur insertion"});

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Register.css';
 import { useNavigate } from 'react-router-dom';
+import {io} from "socket.io-client";
 
 const Register = () => {
   const [role, setRole] = useState("1");
@@ -48,7 +49,7 @@ const Register = () => {
         console.log("Inscription réussie avec rôle :", role);
         localStorage.setItem("token", data.authorization);
         window.location.reload();
-        if (role === "2") {
+        if (role == 2) {
           navigate("/create-restaurant");
         } else {
           navigate("/");

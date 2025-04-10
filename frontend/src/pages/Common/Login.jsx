@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './Login.css';
+// import { Link } from 'react-router-dom';
+
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -24,6 +26,12 @@ const Login = () => {
       if (response.ok) {
         // Stocker le token reçu
         localStorage.setItem("token", data.authorization);
+        console.log(JSON.stringify(data.authorization));
+        console.log(JSON.stringify(data.user_info))
+        if(data.user_info.user_type == 2){
+          console.log("USER RESTO CREATION WS")
+        }
+        navigate("/");
 
         // 🔁 Appel à /authenticate pour récupérer user_type
         const authRes = await fetch("http://localhost:3100/authenticate", {
@@ -47,7 +55,7 @@ const Login = () => {
           navigate("/");
         }
 
-        window.location.reload();
+        // window.location.reload();
       } else {
         alert(data.message || "Email ou mot de passe invalide.");
       }

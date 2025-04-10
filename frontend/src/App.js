@@ -22,6 +22,8 @@ import Profile from './pages/client/Profile';
 import EditArticle from './pages/Restaurateur/EditArticle';
 import CreateMenu from './pages/Restaurateur/CreateMenu';
 import Parrainage from './pages/Common/Parrainage';
+import WebSocketComponent from "./pages/test";
+
 import Livraison from './pages/delivery/Livraison';
 import HistoriqueLivraison from './pages/delivery/HistoriqueLivraison';
 import RecapCommande from './pages/delivery/RecapCommande';
@@ -65,6 +67,7 @@ function App() {
 
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/testSocket" element={<WebSocketComponent />} />
       </Routes>
       <Footer />
       <MobileFooterSwitcher />
@@ -73,3 +76,4 @@ function App() {
 }
 
 export default App;
+
