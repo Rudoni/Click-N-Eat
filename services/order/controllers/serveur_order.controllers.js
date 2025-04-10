@@ -56,7 +56,27 @@ exports.viewOrder = async (req,res) =>{
 }
 
 exports.validerCommandeResto = async (req,res) =>{
+    const {data, clientOrder} = req.body;
 
+    const resto = {restaurantId: 2}
+
+    try {
+
+        const result = await collection.updateOne(
+            { _id: clientOrder._id  },       // filtre : quel document modifier
+            { $set: { status: "Confirmee" } }  // mise à jour : quels champs modifier
+        );
+
+        if (result.acknowledged) {
+            res.status(200).json({message: 'commade maj:'});
+            notify.notifyDelivery(2, clientOrder)
+        } else {
+            console.log('L\'insertion a échoué');
+            res.status(400).json({message: "erreur insertion"});
+        }
+    } catch (err) {
+        res.status(400).json({message: "erreur insertion"});
+    }
 }
 
 exports.supprimer = async (req, res) =>{

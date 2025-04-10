@@ -1,12 +1,13 @@
 const http = require("http");
 const express = require('express');
-const { Server } = require("socket.io");
+const {Server} = require("socket.io");
 
 const port = 3004;
 const app = express();
 const server = http.createServer(app); // Le vrai serveur HTTP
 
-const userSockets = new Map();
+const restoSocket = new Map();
+const deliverySocket = new Map()
 
 app.use(express.json());
 require('./routes/serveur_order.routes.js')(app);
@@ -39,28 +40,48 @@ io.on("connection", (socket) => {
         });
         const data_token = await res.json();
         console.log(data_token)
-        const val = data_token.data.user_id
-        if(data_token.data.user_type == 2){
-            userSockets.set(socket.id, {val});
-            console.log(`Utilisateur ${data_token.data.user_id} connecté avec le socket ${socket.id}`);
+        if (res.ok) {
+            const val = data_token.data.user_id
+            if (data_token.data.user_type == 2) {
+                restoSocket.set(socket.id, {val});
+                console.log(`Utilisateur ${data_token.data.user_id} connecté avec le socket ${socket.id}`);
+            }
+            if (data_token.data.user_type == 4) {
+                deliverySocket.set(socket.id, {val});
+                console.log(`Utilisateur ${data_token.data.user_id} connecté avec le socket ${socket.id}`);
+            }
         }
     });
 
 
     socket.on("disconnect", () => {
         console.log("Restaurateur déconnecté :", socket.id);
-        userSockets.delete(socket.id)
+        restoSocket.delete(socket.id)
+        deliverySocket.delete(socket.id)
     });
 });
 
 exports.notifyNewOrder = (restaurantId, orderData) => {
-    console.log(userSockets)
+    console.log(restoSocket)
     // Filtrer les sockets qui appartiennent au restaurantId spécifique
-    userSockets.forEach((value, socketId) => {
+    restoSocket.forEach((value, socketId) => {
         console.log("valuse", value, " rest id ", restaurantId)
         if (value.val == restaurantId) {
             console.log("id ", socketId)
             io.to(socketId).emit("new-order", orderData);
+        }
+    });
+}
+
+exports.notifyDelivery = (orderData) => {
+    // Filtrer les sockets qui appartiennent au restaurantId spécifique
+    let keys = Array.from(deliverySocket.keys());
+    const key = keys[Math.floor(Math.random() * keys.length)];
+
+    deliverySocket.forEach((value, socketId) => {
+        if (value.val == key) {
+            console.log("id ", socketId)
+            io.to(socketId).emit("new-delivery", orderData);
         }
     });
 }

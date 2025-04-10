@@ -274,6 +274,32 @@ exports.order = async (req, res) => {
     }
 };
 
+exports.acceptOrder = async (req, res) => {
+    console.log("acceptOrder")
+    try {
+
+        const token = req.headers.authorization || '';
+
+        const auth = await authenticated(token)
+
+        if (auth.response) {
+
+            req.body.data = auth.info
+            console.log(JSON.stringify(req.body))
+
+            const response = await axios.post(`${SERVICE_URL_order}/acceptOrder`, req.body);
+
+            res.status(response.status).json(response.data);
+        } else {
+            res.status(400).json({ message: "vous n'etes pas authentifié" });
+        }
+    } catch (error) {
+        // console.error('Erreur Axios:', error.message);
+        res.status(500).send('Erreur interne du serveur');
+    }
+};
+
+
 exports.testOrderView = async (req, res) => {
     console.log("test order")
     try {
@@ -524,8 +550,6 @@ exports.getListeArticleMenuRestaurant = async (req, res) => {
         res.status(500).send('Erreur interne du serveur');
     }
 };
-
-
 // referral
 exports.getReferralCode = async (req, res) => {
   try {
@@ -546,8 +570,6 @@ exports.getReferralCode = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur (gateway)' });
   }
 };
-
-
 
 exports.createReferralCode = async (req, res) => {
   try {
