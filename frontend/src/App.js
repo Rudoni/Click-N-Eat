@@ -29,6 +29,7 @@ import LivrerCommande from './pages/delivery/LivrerCommande';
 import MobileFooterSwitcher from './components/MobileFooterSwitcher';
 import RestaurantDashboard from './pages/Restaurateur/Dashboard';
 import GestionCommandes from './pages/Restaurateur/OrderManagement';
+import Unauthorized from './pages/Common/Unauthorized';
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
         <Route path="/Dashboard" element={<RestaurantDashboard />} />
         <Route path="/OrderManagement" element={<GestionCommandes />} />
 
+        <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
