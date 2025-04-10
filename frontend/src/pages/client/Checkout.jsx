@@ -28,8 +28,19 @@ const Checkout = () => {
 
     // Récupération de l'adresse depuis l'API
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        const userType = localStorage.getItem("user_type");
+        if (userType !== "1") {
+          navigate("/unauthorized");
+          return;
+        }
+        if (!token) {
+          navigate("/unauthorized");
+          return;
+        }
+
         const fetchAddress = async () => {
-            const token = localStorage.getItem("token");
+            
             try {
                 const res = await fetch("http://localhost:3100/profile", {
                     method: "POST",
