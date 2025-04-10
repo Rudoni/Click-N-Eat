@@ -677,3 +677,47 @@ exports.updateMenu = async (req, res) => {
     res.status(500).json({ message: "Erreur interne du serveur." });
   }
 };
+
+exports.getRestaurantsList = async (req, res) => {
+  try {
+    const token = req.headers.authorization || '';
+    const auth = await authenticated(token); // Authentifie l'utilisateur avec le token
+
+    if (auth.response) {
+      // Pas besoin d'ajouter user_id à la requête car on veut tous les restaurants
+      const response = await axios.post(`${SERVICE_URL_restaurant}/restaurant/list`, req.body, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      res.status(response.status).json(response.data);
+    } else {
+      res.status(400).json({ message: "Vous n'êtes pas authentifié" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+};
+
+exports.getRestaurantDetails = async (req, res) => {
+  try {
+    const token = req.headers.authorization || '';  // Récupère le token d'authentification depuis les headers
+    const auth = await authenticated(token); // Vérifie si l'utilisateur est authentifié avec le token
+
+    if (auth.response) {
+      // Si l'utilisateur est authentifié, on effectue l'appel à l'API back-end pour récupérer les détails du restaurant
+      const response = await axios.post(`${SERVICE_URL_restaurant}/restaurant/details`, req.body, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Si la requête réussit, on renvoie les données récupérées par le back-end
+      res.status(response.status).json(response.data);
+    } else {
+      // Si l'utilisateur n'est pas authentifié, on renvoie une erreur
+      res.status(400).json({ message: "Vous n'êtes pas authentifié" });
+    }
+  } catch (error) {
+    console.error('Erreur dans l\'API Gateway lors de la récupération des détails du restaurant:', error);
+    // Si une erreur se produit, on renvoie une erreur 500 (erreur interne du serveur)
+    res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+};

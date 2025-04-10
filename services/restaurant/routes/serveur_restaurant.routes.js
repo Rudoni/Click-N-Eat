@@ -7,6 +7,8 @@ module.exports = function(app) {
     app.post("/getArticle", authController.getArticle);
     app.post("/getMenu", authController.getMenu);
     app.post("/getListeArticleMenuRestaurant", authController.getListeArticleMenuRestaurant);
+    app.post("/restaurant/list", authController.getRestaurantsList);
+    app.post("/restaurant/details", authController.getRestaurantDetails);
 
     //add
     app.post("/addRestaurant", authController.addRestaurant);

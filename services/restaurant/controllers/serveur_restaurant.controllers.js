@@ -550,3 +550,91 @@ exports.updateMenu = async (req, res) => {
     return res.status(500).json({ message: "Erreur interne du serveur." });
   }
 };
+
+exports.getRestaurantsList = async (req, res) => {
+  try {
+    // Pas besoin de récupérer un user_id, on veut tous les restaurants
+    const query = {
+      text: 'SELECT restaurant_id, restaurant_name, restaurant_description FROM restaurant',
+    };
+
+    const response = await client.query(query);
+
+    if (response.rows.length === 0) {
+      return res.status(404).json({ message: "Aucun restaurant trouvé" });
+    }
+
+    return res.status(200).json({ data: response.rows });
+  } catch (e) {
+    console.error("Erreur lors de la récupération des restaurants :", e);
+    return res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+};
+
+exports.getRestaurantDetails = async (req, res) => {
+  const { id } = req.body; // On récupère l'ID du restaurant depuis le corps de la requête
+
+  if (!id) {
+    return res.status(400).json({ message: "L'ID du restaurant est requis" });
+  }
+
+  try {
+    // 1. Récupérer les informations générales du restaurant
+    const restaurantQuery = {
+      name: 'get-restaurant-details',
+      text: `
+        SELECT r.restaurant_name AS nom, r.restaurant_description, r.address_name AS adresse, r.address_city, r.address_postal_code, r.address_country
+        FROM restaurant r
+        WHERE r.restaurant_id = $1
+      `,
+      values: [id],
+    };
+
+    const restaurantResult = await client.query(restaurantQuery);
+
+    if (restaurantResult.rows.length === 0) {
+      return res.status(404).json({ message: "Restaurant non trouvé" });
+    }
+
+    const restaurant = restaurantResult.rows[0];
+
+    // 2. Récupérer les menus associés au restaurant
+    const menusQuery = {
+      name: 'get-menus-by-restaurant',
+      text: `
+        SELECT menu_id AS id, menu_name AS nom, price AS prix
+        FROM menu
+        WHERE restaurant_id = $1
+      `,
+      values: [id],
+    };
+
+    const menusResult = await client.query(menusQuery);
+
+    // 3. Récupérer les articles associés au restaurant
+    const articlesQuery = {
+      name: 'get-articles-by-restaurant',
+      text: `
+        SELECT article_id AS id, article_name AS nom, price AS prix, can_be_sold_individually AS venduSolo
+        FROM article
+        WHERE restaurant_id = $1
+      `,
+      values: [id],
+    };
+
+    const articlesResult = await client.query(articlesQuery);
+
+    // 4. Formater la réponse avec les menus et articles récupérés
+    const restaurantDetails = {
+      ...restaurant,
+      menus: menusResult.rows,
+      articles: articlesResult.rows,
+    };
+
+    return res.status(200).json(restaurantDetails);
+
+  } catch (error) {
+    console.error("Erreur lors de la récupération des détails du restaurant:", error);
+    return res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+};

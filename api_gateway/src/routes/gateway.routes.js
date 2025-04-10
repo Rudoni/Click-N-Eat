@@ -13,6 +13,7 @@ module.exports = function(app) {
     app.post("/order", authController.order)
     app.post("/testOrderView", authController.testOrderView)
     app.post("/supprimerCommande", authController.supprimerOrder)
+    app.post("/restaurant/details", authController.getRestaurantDetails);
 
 
     app.post("/profile", authController.getProfile);
@@ -26,6 +27,7 @@ module.exports = function(app) {
     app.post("/addMenu", authController.addMenu)
     app.put("/article/update", authController.updateArticle);
     app.put("/menu/update", authController.updateMenu);
+    app.post("/restaurant/list", authController.getRestaurantsList);
 
     // Address routes
     app.post("/address/create", authController.createAddress);
