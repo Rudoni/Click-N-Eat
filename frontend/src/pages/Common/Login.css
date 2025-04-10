@@ -33,6 +33,10 @@
     font-weight: bold;
   }
   
+  .login-form .btn {
+    width: 100%;
+  }
+
   .login-form input {
     padding: 0.8rem;
     border-radius: 10px;
@@ -56,6 +60,7 @@
     border: none;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
+    width: 100%;
   }
   
   .btn.yellow {
