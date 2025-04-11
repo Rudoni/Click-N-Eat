@@ -1,4 +1,5 @@
-const client = require('../db'); // Importer la connexion MongoDB
+const client = require('../db'); // Importer la connexion MongoDB*
+const { ObjectId } = require("mongodb");
 
 const notify = require("../server_order");
 
@@ -35,8 +36,8 @@ exports.viewOrder = async (req,res) =>{
     console.log(data.user_id)
     switch (data.user_type){
         case 1:
-            result = await collection.find({}).toArray();
-            // result = await collection.find({ "client.user_id": data.user_id }).toArray();
+            // result = await collection.find({}).toArray();
+            result = await collection.find({ "client.user_id": data.user_id }).toArray();
             break;
         case 2:
             // result = await collection.find({ "resto.resto_id": resto.resto_id }).toArray();
@@ -61,18 +62,52 @@ exports.validerCommandeResto = async (req,res) =>{
     const resto = {restaurantId: 2}
 
     try {
+
+        const { _id, ...fieldsToUpdate } = clientOrder;
+
         console.log("aaaaaaaaaaaaa", clientOrder)
+        fieldsToUpdate.state = "Confirmee"
         const result = await collection.updateOne(
-            { _id: clientOrder._id  },       // filtre : quel document modifier
-            { $set: { status: "Confirmee" } }  // mise à jour : quels champs modifier
+            {  _id: new ObjectId(clientOrder._id) },       // filtre : quel document modifier
+            { $set: fieldsToUpdate }  // mise à jour : quels champs modifier
         );
 
 
         if (result.acknowledged) {
             clientOrder.state = "Confirmee"
             console.log("accepter")
-            res.status(200).json({message: 'commade maj:'});
+            res.status(200).json({message: 'commade maj:', result});
             notify.notifyDelivery(clientOrder)
+        } else {
+            console.log('L\'insertion a échoué');
+            res.status(400).json({message: "erreur insertion"});
+        }
+    } catch (err) {
+        console.log("erreur", err)
+        res.status(400).json({message: "erreur insertion"});
+    }
+}
+
+exports.validerCommandeLivreur = async (req,res) =>{
+    const {data, clientOrder} = req.body;
+
+    const resto = {restaurantId: 2}
+
+    try {
+        const { _id, ...fieldsToUpdate } = clientOrder;
+
+        console.log("aaaaaaaaaaaaa", clientOrder)
+        fieldsToUpdate.state = "en cour de livraison"
+        const result = await collection.updateOne(
+            {  _id: new ObjectId(clientOrder._id) },       // filtre : quel document modifier
+            { $set: fieldsToUpdate }  // mise à jour : quels champs modifier
+        );
+
+
+        if (result.acknowledged) {
+            clientOrder.state = "en cour de livraison"
+            console.log("accepter")
+            res.status(200).json({message: 'commade maj:'});
         } else {
             console.log('L\'insertion a échoué');
             res.status(400).json({message: "erreur insertion"});

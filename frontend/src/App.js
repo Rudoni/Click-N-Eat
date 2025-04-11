@@ -34,6 +34,8 @@ import RestaurantDashboard from './pages/Restaurateur/Dashboard';
 import GestionCommandes from './pages/Restaurateur/OrderManagement';
 import Unauthorized from './pages/Common/Unauthorized';
 
+import UserOrder from './pages/client/viewOrder'
+
 function App() {
   return (
     <Router>
@@ -71,6 +73,7 @@ function App() {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/testSocket" element={<WebSocketComponent />} />
+        <Route path="/viewOrder" element={<UserOrder />} />
 
       </Routes>
       <Footer />

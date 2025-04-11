@@ -14,6 +14,7 @@ module.exports = function(app) {
     app.post("/testOrderView", authController.testOrderView)
     app.post("/supprimerCommande", authController.supprimerOrder)
     app.post("/acceptOrder", authController.acceptOrder)
+    app.post("/acceptOrderLivreur", authController.acceptOrderLivreur)
     app.post("/restaurant/details", authController.getRestaurantDetails);
 
 

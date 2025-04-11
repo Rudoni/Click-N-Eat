@@ -56,7 +56,7 @@ const WebSocketComponentLivereur = () => {
               <button className="btn yellow" onClick={handleValider}>Valider</button>
             )}
 
-            {message.state === "confirmee" && (
+            {message.state === "Confirmee" && (
               <button className="btn green" onClick={handleAccepter}>Accepter</button>
             )}
           </div>

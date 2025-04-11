@@ -5,4 +5,5 @@ module.exports = function(app) {
     app.post("/testView", authController.viewOrder)
     app.post("/supprimer", authController.supprimer)
     app.post("/acceptOrder", authController.validerCommandeResto)
+    app.post("/validerCommandeLivreur", authController.validerCommandeLivreur)
 };
