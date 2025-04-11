@@ -50,10 +50,10 @@ const RestaurantDetails = () => {
       <div className="back-arrow" onClick={() => navigate(-1)}>←</div>
 
       <div className="restaurant-header">
-        <h2 className="restaurant-name">{restaurant.name}</h2>
-        <p className="restaurant-description">{restaurant.description}</p>
+        <h2 className="restaurant-name">{restaurant.nom}</h2>
+        <p className="restaurant-description">{restaurant.restaurant_description}</p>
         <p className="restaurant-address">
-          {restaurant.address}, {restaurant.address_postal_code} {restaurant.address_city}, {restaurant.address_country}
+          {restaurant.adresse}, {restaurant.address_postal_code} {restaurant.address_city}, {restaurant.address_country}
         </p>
       </div>
 
@@ -63,8 +63,8 @@ const RestaurantDetails = () => {
           // const menuArticles = getArticlesFromIds(menu.articles);
           return (
             <div key={menu.id} className="menu-card">
-              <h4>{menu.name}</h4>
-              <p><strong>Prix :</strong> {menu.price} €</p>
+              <h4>{menu.nom}</h4>
+              <p><strong>Prix :</strong> {menu.prix} €</p>
               {/* <ul>
                 {menuArticles.map(article => (
                   <li key={article.id}>
@@ -83,11 +83,11 @@ const RestaurantDetails = () => {
       <h3 className="menu-title">Articles à la carte</h3>
       <div className="menu-list">
         {restaurant.articles
-          .filter(article => article.can_be_sold_individually)
+          .filter(article => article.vendusolo)
           .map(article => (
             <div key={article.id} className="menu-card">
-              <h4>{article.name}</h4>
-              <p>{article.type} - {article.price} €</p>
+              <h4>{article.nom}</h4>
+              <p>{article.type} - {article.prix} €</p>
               <button className="order-btn" onClick={() => addToCart(article, 'article')}>
                 Ajouter au panier
               </button>
