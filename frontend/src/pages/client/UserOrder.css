@@ -1,0 +1,62 @@
+.user-orders-page {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .user-orders-page h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  .orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .order-card {
+    border: 1px solid #ddd;
+    border-left: 6px solid #3f51b5;
+    border-radius: 8px;
+    padding: 1.5rem;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  
+  .order-card h3 {
+    margin-top: 0;
+    color: #3f51b5;
+  }
+  
+  .items-section {
+    margin-top: 1rem;
+  }
+  
+  .items-section ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+  }
+  
+  .items-section li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .etat {
+    font-weight: bold;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+  
+  .etat.confirmee {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .etat.en.attante {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  

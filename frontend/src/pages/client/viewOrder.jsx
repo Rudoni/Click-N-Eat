@@ -1,74 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './UserOrder.css';
 
 const UserOrder = () => {
-    const [form, setForm] = useState({
-        restaurantName: '',
-        description: '',
-        country: '',
-        city: '',
-        postalCode: '',
-        address: '',
-    });
-    const navigate = useNavigate();
-    const [mainImagePreview, setMainImagePreview] = useState(null);
-    const [backgroundImagePreview, setBackgroundImagePreview] = useState(null);
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState(null)
+  const [orders, setOrders] = useState([]);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userType = localStorage.getItem("user_type");
 
-        const userType = localStorage.getItem("user_type");
-        if (userType !== "1") {
-            navigate("/unauthorized");
-            return;
+    if (userType !== "1" || !token) {
+      navigate("/unauthorized");
+      return;
+    }
+
+    const fetchUserOrder = async () => {
+      try {
+        const response = await fetch("http://localhost:3100/testOrderView", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({})
+        });
+
+        const json = await response.json();
+        if (response.ok) {
+          setOrders(json);
         }
-        if (!token) {
-            navigate("/unauthorized");
-            return;
-        }
+      } catch (e) {
+        console.error("Erreur lors de la récupération des commandes :", e);
+      }
+    };
 
-        const fetchUserOrder = async () => {
-            try {
-                const response = await fetch("http://localhost:3100/testOrderView", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({})
-                });
+    fetchUserOrder();
+  }, [navigate]);
 
-                const json = await response.json();
-                if (response.ok) {
-                    console.log(json)
-                    // setForm({
-                    //     restaurantName: json.data.restaurant_name || '',
-                    //     description: json.data.restaurant_description || '',
-                    //     country: json.data.address_country || '',
-                    //     city: json.data.address_city || '',
-                    //     postalCode: json.data.address_postal_code || '',
-                    //     address: json.data.address_name || '',
-                    // });
-                    setMessage(json)
-                }
-            }catch(e){
+  return (
+    <section className="user-orders-page">
+      <h1>Mes Commandes</h1>
+      {orders.length === 0 ? (
+        <p>Aucune commande disponible.</p>
+      ) : (
+        <div className="orders-list">
+          {orders.map((order) => (
+            <div key={order._id} className="order-card">
+              <h3>Commande #{order._id.slice(-6)}</h3>
+              <p><strong>ID Client :</strong> {order.client.user_id}</p>
+              <p><strong>ID Restaurant :</strong> {order.resto.restaurantId}</p>
+              <p><strong>État :</strong> <span className={`etat ${order.state.toLowerCase()}`}>{order.state}</span></p>
 
-            }
-        };
-        fetchUserOrder();
-    }, []);
-
-
-
-
-    return (
-        <section className="restaurant-settings-page">
-            <h1>Messages reçus du serveur :</h1>
-            {message && <pre>{JSON.stringify(message, null, 2)}</pre>}
-        </section>
-    );
+              <div className="items-section">
+                <h4>Articles :</h4>
+                <ul>
+                  {order.items.map((item, idx) => (
+                    <li key={idx}>
+                      <span>{item.nom}</span> — {item.type} — {item.quantity} × {item.prix}€
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default UserOrder;
