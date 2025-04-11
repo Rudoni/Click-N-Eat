@@ -23,6 +23,7 @@ import EditArticle from './pages/Restaurateur/EditArticle';
 import CreateMenu from './pages/Restaurateur/CreateMenu';
 import Parrainage from './pages/Common/Parrainage';
 import WebSocketComponent from "./pages/test";
+import WebSocketComponentLivereur from "./pages/delivery/test2"
 
 import Livraison from './pages/delivery/Livraison';
 import HistoriqueLivraison from './pages/delivery/HistoriqueLivraison';
@@ -64,10 +65,13 @@ function App() {
         <Route path="/livrer-commande" element={<LivrerCommande />} />
         <Route path="/Dashboard" element={<RestaurantDashboard />} />
         <Route path="/OrderManagement" element={<GestionCommandes />} />
+        <Route path="/livraison2" element={<WebSocketComponentLivereur />} />
+
 
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/testSocket" element={<WebSocketComponent />} />
+
       </Routes>
       <Footer />
       <MobileFooterSwitcher />

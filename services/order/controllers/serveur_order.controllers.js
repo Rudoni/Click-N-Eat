@@ -61,20 +61,24 @@ exports.validerCommandeResto = async (req,res) =>{
     const resto = {restaurantId: 2}
 
     try {
-
+        console.log("aaaaaaaaaaaaa", clientOrder)
         const result = await collection.updateOne(
             { _id: clientOrder._id  },       // filtre : quel document modifier
             { $set: { status: "Confirmee" } }  // mise à jour : quels champs modifier
         );
 
+
         if (result.acknowledged) {
+            clientOrder.state = "Confirmee"
+            console.log("accepter")
             res.status(200).json({message: 'commade maj:'});
-            notify.notifyDelivery(2, clientOrder)
+            notify.notifyDelivery(clientOrder)
         } else {
             console.log('L\'insertion a échoué');
             res.status(400).json({message: "erreur insertion"});
         }
     } catch (err) {
+        console.log("erreur", err)
         res.status(400).json({message: "erreur insertion"});
     }
 }

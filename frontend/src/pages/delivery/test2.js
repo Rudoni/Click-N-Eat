@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSocket } from "../../context/SocketProvider";
 
-const WebSocketComponent = () => {
+const WebSocketComponentLivereur = () => {
     const [message, setMessage] = useState(null);
     const [userId, setUserId] = useState(1); // Par exemple, l'ID de l'utilisateur, tu peux le récupérer via ton système d'authentification
     const [restaurantId, setRestaurantId] = useState(1); // Par exemple, l'ID du restaurant
@@ -30,4 +30,4 @@ const WebSocketComponent = () => {
     );
 };
 
-export default WebSocketComponent;
+export default WebSocketComponentLivereur;

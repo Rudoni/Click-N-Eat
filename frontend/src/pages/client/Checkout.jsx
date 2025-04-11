@@ -131,7 +131,7 @@ const Checkout = () => {
 
                 const data = await response.json();
                 if (response.ok) {
-                    navigate("/dashboard");
+                    navigate("/");
                 } else {
                     setError(data.message || "Une erreur est survenue.");
                 }

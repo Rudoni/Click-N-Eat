@@ -77,9 +77,11 @@ exports.notifyDelivery = (orderData) => {
     // Filtrer les sockets qui appartiennent au restaurantId spécifique
     let keys = Array.from(deliverySocket.keys());
     const key = keys[Math.floor(Math.random() * keys.length)];
+    console.log(deliverySocket)
+    console.log(deliverySocket.get(key))
 
     deliverySocket.forEach((value, socketId) => {
-        if (value.val == key) {
+        if (value.val == deliverySocket.get(key).val) {
             console.log("id ", socketId)
             io.to(socketId).emit("new-delivery", orderData);
         }
